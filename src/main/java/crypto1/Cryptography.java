@@ -1,26 +1,38 @@
 package crypto1;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
 
 public class Cryptography {
 
-    public static byte offsetMatrixEncryption(){
+    public static List<Byte> offsetMatrixEncryption(byte[] input, int[] key){
+        int maxKeyValue = Arrays.stream(key).max().getAsInt();
+        int[] recalculatedKey = Arrays.stream(key).map(x-> x-1).toArray();
+        Byte[][] encryptionMatrix = calcualteByteEncryptionMatrix(input,maxKeyValue);
 
+        int currentKeyPos = 0;
+        List<Byte> encrypted = new ArrayList<>();
 
-        return 0  ;
+        for(int y = 0; y<encryptionMatrix.length;y++){
+            for (int x = 0; x<maxKeyValue;x++){
+                    currentKeyPos = recalculatedKey[x];
+                    if(encryptionMatrix[y][currentKeyPos] != null){
+                        encrypted.add(encryptionMatrix[y][currentKeyPos]);
+                    }
+            }
+        };
+        return encrypted;
     }
 
-    public static String offsetMatrixEncryptionString(byte[] input, int[] key){
+    public static Byte[][] calcualteByteEncryptionMatrix(byte[] input, int x_max){
 
-        int x_max = Arrays.stream(key).max().getAsInt();
-
-        System.out.printf("Max key value: " + x_max);
         int y_max = calculateRowNumber(input,x_max);
-        System.out.printf("Max row value: " + y_max);
 
-        byte[][] matrix = new byte[y_max][x_max];
+        Byte[][] matrix = new Byte[y_max][x_max];
         int counter = 0;
 
         for(int y = 0; y<y_max;y++){
@@ -31,10 +43,8 @@ public class Cryptography {
                 }
             }
         }
-
-        System.out.println("DONE!");
-
-        return "0";
+        System.out.printf("'");
+        return matrix;
     }
 
     private static int calculateRowNumber(byte[] data, int keyMaxVal){
