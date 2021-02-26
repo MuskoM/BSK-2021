@@ -53,7 +53,8 @@ import crypto1.Cryptography;
 
 class BSK{
     public static void main(String[] args) {
-        Cryptography.offsetMatrixEncryption("CRYPTOGRAPHYOSA".getBytes(),new int[]{3,1,4,2});
+        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption("CRYPTOGRAPHYOSA".getBytes(),new int[]{3,1,4,2});
+        System.out.println(Cryptography.encryptedString(encryptedMessage));
     }
 
 }

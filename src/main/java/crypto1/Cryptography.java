@@ -1,18 +1,16 @@
 package crypto1;
 
-import javax.swing.text.html.Option;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
 
 public class Cryptography {
 
-    public static List<Byte> offsetMatrixEncryption(byte[] input, int[] key){
+    public static byte[] offsetMatrixEncryption(byte[] input, int[] key){
         int maxKeyValue = Arrays.stream(key).max().getAsInt();
         int[] recalculatedKey = Arrays.stream(key).map(x-> x-1).toArray();
-        Byte[][] encryptionMatrix = calcualteByteEncryptionMatrix(input,maxKeyValue);
+        byte[][] encryptionMatrix = calcualteByteEncryptionMatrix(input,maxKeyValue);
 
         int currentKeyPos = 0;
         List<Byte> encrypted = new ArrayList<>();
@@ -20,19 +18,27 @@ public class Cryptography {
         for(int y = 0; y<encryptionMatrix.length;y++){
             for (int x = 0; x<maxKeyValue;x++){
                     currentKeyPos = recalculatedKey[x];
-                    if(encryptionMatrix[y][currentKeyPos] != null){
+                    if(encryptionMatrix[y][currentKeyPos] != 0){
                         encrypted.add(encryptionMatrix[y][currentKeyPos]);
                     }
             }
         };
-        return encrypted;
+        byte[] encryptedMessage  = new byte[encrypted.size()];
+        for(int i =0; i<encrypted.size();i++){
+            encryptedMessage[i] = encrypted.get(i);
+        }
+        return encryptedMessage;
     }
 
-    public static Byte[][] calcualteByteEncryptionMatrix(byte[] input, int x_max){
+    public static String encryptedString(byte[] encryptedData){
+        return new String(encryptedData,StandardCharsets.UTF_8);
+    }
+
+    public static byte[][] calcualteByteEncryptionMatrix(byte[] input, int x_max){
 
         int y_max = calculateRowNumber(input,x_max);
 
-        Byte[][] matrix = new Byte[y_max][x_max];
+        byte[][] matrix = new byte[y_max][x_max];
         int counter = 0;
 
         for(int y = 0; y<y_max;y++){
@@ -43,7 +49,6 @@ public class Cryptography {
                 }
             }
         }
-        System.out.printf("'");
         return matrix;
     }
 
