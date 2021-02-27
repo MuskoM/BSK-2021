@@ -1,6 +1,9 @@
 package crypto1;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CryptographyB {
 
@@ -38,10 +41,10 @@ public class CryptographyB {
         return calculatedKey;
     }
 
-    private static int rows(String key, String sentence){
+    private static int rows(String key, byte[] sentence){
         int rows = 1;
         int keyLenght = key.length();
-        int sentenceLenght = sentence.length();
+        int sentenceLenght = sentence.length;
         while(sentenceLenght > keyLenght){
             sentenceLenght = sentenceLenght - keyLenght;
             rows++;
@@ -49,39 +52,44 @@ public class CryptographyB {
         return rows;
     }
 
-    public static String calculateCrypto(String key, String sentence){
+    public static byte[] calculateCrypto(String key, byte[] sentence){
 
-        StringBuilder cryptoSentence = new StringBuilder();
         int rows = rows(key,sentence);
         int columns = key.length();
-        char[][] matrixCrypto = new char[rows][columns];
+        byte[][] matrixCrypto = new byte[rows][columns];
         int x = 0;
         for(int i=0;i<rows;i++){
             for(int j=0;j<columns;j++){
-                if(x < sentence.length()){
-                    matrixCrypto[i][j] = sentence.charAt(x);
+                if(x < sentence.length){
+                    matrixCrypto[i][j] = sentence[x];
                     x++;
                 }
             }
         }
 
         int[] keyTable = calculatedKey(key);
+        List<Byte> list_crypto = new LinkedList<>();
         int z;
         for(int i=0;i<columns;i++){
             z = keyTable[i];
             for(int j=0;j<rows;j++){
-                cryptoSentence.append(matrixCrypto[j][z]);
+                list_crypto.add(matrixCrypto[j][z]);
             }
         }
 
-        return cryptoSentence.toString();
+        byte[] byte_crypto = new byte[list_crypto.size()];
+        for(int i=0;i<list_crypto.size();i++){
+            byte_crypto[i] = list_crypto.get(i);
+        }
+
+        return byte_crypto;
     }
 
-    public static String calculateUnCrypto(String key, String sentence){
-        StringBuilder unCryptoSentence = new StringBuilder();
+    public static byte[] calculateUnCrypto(String key, byte[] sentence){
+
         int rows = rows(key,sentence);
         int columns = key.length();
-        char[][] matrixUnCrypto = new char[rows][columns];
+        byte[][] matrixUnCrypto = new byte[rows][columns];
         int[] keyTable = calculatedKey(key);
         int x;
         int z = 0;
@@ -89,19 +97,29 @@ public class CryptographyB {
         for(int i=0;i<columns;i++){
             x = keyTable[i];
             for(int j=0;j<rows;j++){
-                if(z < sentence.length()) {
-                    matrixUnCrypto[j][x] = sentence.charAt(z);
+                if(z < sentence.length) {
+                    matrixUnCrypto[j][x] = sentence[z];
                     z++;
                 }
             }
         }
 
+        List<Byte> list_crypto = new LinkedList<>();
         for(int i=0;i<rows;i++){
             for(int j=0;j<columns;j++){
-                unCryptoSentence.append(matrixUnCrypto[i][j]);
+                list_crypto.add(matrixUnCrypto[i][j]);
             }
         }
 
-        return unCryptoSentence.toString();
+        byte[] byte_crypto = new byte[list_crypto.size()];
+        for(int i=0;i<list_crypto.size();i++){
+            byte_crypto[i] = list_crypto.get(i);
+        }
+
+        return byte_crypto;
+    }
+
+    public static String cryptoString(byte[] cryptoData){
+        return new String(cryptoData, StandardCharsets.UTF_8);
     }
 }
