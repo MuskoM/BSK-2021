@@ -3,69 +3,89 @@ import crypto1.Cryptography;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-//import javafx.application.Application;
-//import javafx.event.ActionEvent;
-//import javafx.event.EventHandler;
-//import javafx.geometry.Insets;
-//import javafx.scene.Scene;
-//import javafx.scene.control.Button;
-//import javafx.scene.control.Label;
-//import javafx.scene.layout.HBox;
-//import javafx.scene.text.Font;
-//import javafx.scene.text.FontWeight;
-//import javafx.stage.Stage;
+import java.util.Arrays;
+
+import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 
-//public class BSK extends Application {
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-//
-//    @Override
-//    public void start(Stage primaryStage) {
-//
-//
-//
-//
-//        primaryStage.setTitle("Hello World!");
-//
-//        Button btn = new Button("_Button");
-//        var lbl = new Label("Simple JavaFX application.");
-//
-//        lbl.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
-//        btn.setText("Say 'Hello World'");
-//        btn.setOnAction(new EventHandler<ActionEvent>() {
-//
-//            @Override
-//            public void handle(ActionEvent event) {
-//                lbl.setText("Hello World");
-//            }
-//        });
-//
-//        HBox root = new HBox();
-//        root.setId("Root");
-//        root.setPadding(new Insets(25));
-//        root.getChildren().add(btn);
-//        root.getChildren().add(lbl);
-//        var scene = new Scene(root, 300, 250);
-//        scene.getStylesheets().add("style.css");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
-//}
-
-
-class BSK{
-    public static void main(String[] args) throws IOException {
-        int[] key = new int[]{4,3,5,2,1,6,7,8};
-
-        byte[] text = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
-
-        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption(text,key);
-        System.out.println(Cryptography.encryptedString(encryptedMessage));
-        byte[] decryptedMessage = Cryptography.offsetMatrixDecryption(encryptedMessage,key);
-        System.out.println(Cryptography.encryptedString(decryptedMessage));
+public class BSK extends Application {
+    public static void main(String[] args) {
+        launch(args);
     }
 
+    @Override
+    public void start(Stage primaryStage) {
+        String[] functionLabels  = new String[]{"Encrypt","Decrypt"};
+        primaryStage.setTitle("Decryptor&Encryptor BSK-2021");
+        primaryStage.show();
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25,25,25,25));
+
+        Text baseInfo = new Text("Function");
+        baseInfo.setFont(Font.font("Tahoma", FontWeight.NORMAL,20));
+        grid.add(baseInfo,0,0,2,1);
+
+
+
+        Label inputTypeLabel = new Label("Choose input option");
+        grid.add(inputTypeLabel,0,1);
+
+
+        Label inputLabel = new Label("Input data");
+        grid.add(inputLabel,0,2);
+
+        Button encryptBtn = new Button("Encrypt");
+        HBox hbBtn = new HBox();
+        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(encryptBtn);
+        grid.add(hbBtn,1,4);
+
+        ChoiceBox functionChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Encrypt","Decrypt"));
+        functionChoiceBox.setValue("Encrypt");
+        functionChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> ov, Number old_val, Number new_val)->{
+                    encryptBtn.setText(functionLabels[new_val.intValue()]);
+                }
+        );
+        grid.add(functionChoiceBox,1,0);
+
+        Scene scene = new Scene(grid,300,275);
+        primaryStage.setScene(scene);
+        scene.getStylesheets().add("./style.css");
+
+    }
 }
+
+
+//class BSK{
+//    public static void main(String[] args) throws IOException {
+//        int[] key = new int[]{4,3,5,2,1,6,7,8};
+//
+//        byte[] text = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
+//
+//        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption(text,key);
+//        System.out.println(Cryptography.encryptedString(encryptedMessage));
+//        byte[] decryptedMessage = Cryptography.offsetMatrixDecryption(encryptedMessage,key);
+//        System.out.println(Cryptography.encryptedString(decryptedMessage));
+//    }
+//
+//}
 
