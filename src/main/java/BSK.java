@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 
 
 public class BSK extends Application {
@@ -44,13 +45,30 @@ public class BSK extends Application {
         grid.add(baseInfo,0,0,2,1);
 
 
-
-        Label inputTypeLabel = new Label("Choose input option");
+        Label inputTypeLabel = new Label("Choose input file");
         grid.add(inputTypeLabel,0,1);
-
 
         Label inputLabel = new Label("Input data");
         grid.add(inputLabel,0,2);
+
+        final FileChooser fileChooser = new FileChooser();
+
+        Button openFileBtn = new Button("Select file...");
+        openFileBtn.setOnAction(actionEvent -> {
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
+                try {
+                    byte[] data = readFile(file);
+                    inputLabel.setText(Cryptography.encryptedString(Arrays.copyOf(data,15)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        grid.add(openFileBtn,1,1);
+
+
 
         Button encryptBtn = new Button("Encrypt");
         HBox hbBtn = new HBox();
@@ -72,6 +90,12 @@ public class BSK extends Application {
         scene.getStylesheets().add("./style.css");
 
     }
+
+    public byte[] readFile(File file) throws IOException {
+        byte[] text = Files.readAllBytes(file.toPath());
+        return text;
+    }
+
 }
 
 
