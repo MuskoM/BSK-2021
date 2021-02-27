@@ -1,5 +1,8 @@
 import crypto1.Cryptography;
 import crypto1.CryptographyB;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 //import javafx.application.Application;
 //import javafx.event.ActionEvent;
 //import javafx.event.EventHandler;
@@ -53,13 +56,20 @@ import crypto1.CryptographyB;
 
 
 class BSK{
-    public static void main(String[] args) {
-        Cryptography.offsetMatrixEncryption("CRYPTOGRAPHYOSA".getBytes(),new int[]{3,1,4,2});
-
+    public static void main(String[] args) throws IOException {
         String a = CryptographyB.calculateCrypto("CONVENIENCE", "HERE IS A SECRET MESSAGE ENCIPHERED BY TRANSPOSITION");
         System.out.println(a);
         String b = CryptographyB.calculateUnCrypto("CONVENIENCE",a);
         System.out.println(b);
+
+        int[] key = new int[]{4,3,5,2,1,6,7,8};
+
+        byte[] text = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
+
+        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption(text,key);
+        System.out.println(Cryptography.encryptedString(encryptedMessage));
+        byte[] decryptedMessage = Cryptography.offsetMatrixDecryption(encryptedMessage,key);
+        System.out.println(Cryptography.encryptedString(decryptedMessage));
     }
 
 }
