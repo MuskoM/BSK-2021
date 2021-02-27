@@ -66,6 +66,7 @@ public class Cryptography {
         int counter = 0;
 
         for (int y=0; y<y_max;y++){
+
             for (int x = 0; x<x_max; x++){
                 if(counter<input.length) {
                     currentKeyVal = recalculatedKey[x];

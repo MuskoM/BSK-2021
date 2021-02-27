@@ -1,4 +1,8 @@
 import crypto1.Cryptography;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 //import javafx.application.Application;
 //import javafx.event.ActionEvent;
 //import javafx.event.EventHandler;
@@ -52,9 +56,12 @@ import crypto1.Cryptography;
 
 
 class BSK{
-    public static void main(String[] args) {
-        int[] key = new int[]{3,1,4,2};
-        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption("CRYPTOGRAPHYOSA".getBytes(),key);
+    public static void main(String[] args) throws IOException {
+        int[] key = new int[]{4,3,5,2,1,6,7,8};
+
+        byte[] text = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
+
+        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption(text,key);
         System.out.println(Cryptography.encryptedString(encryptedMessage));
         byte[] decryptedMessage = Cryptography.offsetMatrixDecryption(encryptedMessage,key);
         System.out.println(Cryptography.encryptedString(decryptedMessage));
