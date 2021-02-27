@@ -57,10 +57,16 @@ import java.nio.file.Files;
 
 class BSK{
     public static void main(String[] args) throws IOException {
-        String a = CryptographyB.calculateCrypto("CONVENIENCE", "HERE IS A SECRET MESSAGE ENCIPHERED BY TRANSPOSITION");
-        System.out.println(a);
-        String b = CryptographyB.calculateUnCrypto("CONVENIENCE",a);
-        System.out.println(b);
+
+        System.out.println("-------------------------");
+        String key_B = "CONVENIENCE";
+        byte[] text_B = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
+
+        byte[] a = CryptographyB.calculateCrypto(key_B, text_B);
+        System.out.println(CryptographyB.cryptoString(a));
+        byte[] b = CryptographyB.calculateUnCrypto(key_B,a);
+        System.out.println(CryptographyB.cryptoString(b));
+        System.out.println("-------------------------");
 
         int[] key = new int[]{4,3,5,2,1,6,7,8};
 
