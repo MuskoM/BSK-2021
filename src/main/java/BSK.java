@@ -1,4 +1,5 @@
 import crypto1.Cryptography;
+import crypto1.CryptographyB;
 //import javafx.application.Application;
 //import javafx.event.ActionEvent;
 //import javafx.event.EventHandler;
@@ -54,6 +55,11 @@ import crypto1.Cryptography;
 class BSK{
     public static void main(String[] args) {
         Cryptography.offsetMatrixEncryption("CRYPTOGRAPHYOSA".getBytes(),new int[]{3,1,4,2});
+
+        String a = CryptographyB.calculateCrypto("CONVENIENCE", "HERE IS A SECRET MESSAGE ENCIPHERED BY TRANSPOSITION");
+        System.out.println(a);
+        String b = CryptographyB.calculateUnCrypto("CONVENIENCE",a);
+        System.out.println(b);
     }
 
 }
