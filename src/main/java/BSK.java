@@ -1,5 +1,5 @@
 import crypto1.Cryptography;
-
+import crypto1.CryptographyB;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,7 +43,6 @@ public class BSK extends Application {
         Text baseInfo = new Text("Function");
         baseInfo.setFont(Font.font("Tahoma", FontWeight.NORMAL,20));
         grid.add(baseInfo,0,0,2,1);
-
 
         Label inputTypeLabel = new Label("Choose input file");
         grid.add(inputTypeLabel,0,1);
