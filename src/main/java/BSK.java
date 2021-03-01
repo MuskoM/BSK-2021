@@ -1,99 +1,43 @@
-import crypto1.Cryptography;
-import crypto1.CryptographyB;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-
+import cw.AssignmentExercise;
+import cw.CW1;
+import cw.CW2;
 import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.control.*;
+
 import javafx.stage.Stage;
-import javafx.stage.FileChooser;
+
 
 
 public class BSK extends Application {
+
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        String[] functionLabels  = new String[]{"Encrypt","Decrypt"};
         primaryStage.setTitle("Decryptor&Encryptor BSK-2021");
         primaryStage.show();
 
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25,25,25,25));
+        //Zadanie 1
+        AssignmentExercise cw1 = new CW1();
+        Tab cw1Tab = cw1.createExecriseTab(primaryStage);
 
-        Text baseInfo = new Text("Function");
-        baseInfo.setFont(Font.font("Tahoma", FontWeight.NORMAL,20));
-        grid.add(baseInfo,0,0,2,1);
+        //Zadanie 2
+        AssignmentExercise cw2 = new CW2();
+        Tab cw2Tab = cw2.createExecriseTab(primaryStage);
 
-        Label inputTypeLabel = new Label("Choose input file");
-        grid.add(inputTypeLabel,0,1);
-
-        Label inputLabel = new Label("Input data");
-        grid.add(inputLabel,0,2);
-
-        final FileChooser fileChooser = new FileChooser();
-
-        Button openFileBtn = new Button("Select file...");
-        openFileBtn.setOnAction(actionEvent -> {
-            File file = fileChooser.showOpenDialog(primaryStage);
-            if (file != null) {
-                try {
-                    byte[] data = readFile(file);
-                    inputLabel.setText(Cryptography.encryptedString(Arrays.copyOf(data,15)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        grid.add(openFileBtn,1,1);
-
-
-
-        Button encryptBtn = new Button("Encrypt");
-        HBox hbBtn = new HBox();
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(encryptBtn);
-        grid.add(hbBtn,1,4);
-
-        ChoiceBox functionChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Encrypt","Decrypt"));
-        functionChoiceBox.setValue("Encrypt");
-        functionChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
-                (ObservableValue<? extends Number> ov, Number old_val, Number new_val)->{
-                    encryptBtn.setText(functionLabels[new_val.intValue()]);
-                }
-        );
-        grid.add(functionChoiceBox,1,0);
-
-        Scene scene = new Scene(grid,300,275);
+        TabPane tabPane = new TabPane(cw1Tab);
+        tabPane.getTabs().add(cw2Tab);
+        Scene scene = new Scene(tabPane,300,275);
         primaryStage.setScene(scene);
         scene.getStylesheets().add("./style.css");
 
     }
 
-    public byte[] readFile(File file) throws IOException {
-        byte[] text = Files.readAllBytes(file.toPath());
-        return text;
-    }
+
 
 }
 
