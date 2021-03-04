@@ -1,7 +1,6 @@
 package crypto1;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +11,7 @@ public class Cryptography {
     public static byte[] offsetMatrixEncryption(byte[] input, int[] key){
         int maxKeyValue = Arrays.stream(key).max().getAsInt();
         int[] recalculatedKey = Arrays.stream(key).map(x-> x-1).toArray();
-        byte[][] encryptionMatrix = calcualteByteEncryptionMatrix(input,maxKeyValue);
+        byte[][] encryptionMatrix = calculateByteEncryptionMatrix(input,maxKeyValue);
 
         int currentKeyPos = 0;
         List<Byte> encrypted = new LinkedList<>();
@@ -79,7 +78,7 @@ public class Cryptography {
         return matrix;
     }
 
-    private static byte[][] calcualteByteEncryptionMatrix(byte[] input, int x_max){
+    private static byte[][] calculateByteEncryptionMatrix(byte[] input, int x_max){
 
         int y_max = calculateRowNumber(input,x_max);
 
