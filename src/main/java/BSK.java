@@ -1,8 +1,10 @@
 import crypto1.Cryptography;
 import crypto1.CryptographyB;
+import crypto1.CryptographyA;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 //import javafx.application.Application;
 //import javafx.event.ActionEvent;
 //import javafx.event.EventHandler;
@@ -57,6 +59,15 @@ import java.nio.file.Files;
 
 class BSK{
     public static void main(String[] args) throws IOException {
+        System.out.println("-------------------------");
+        int key_A = 3;
+        byte[] text_A = "CRYPTOGRAPHY".getBytes();
+
+        byte[] a_A = CryptographyA.railFenceEncryption(text_A, key_A);
+        System.out.println(CryptographyA.cryptoString(a_A));
+        byte[] b_A = CryptographyA.railFenceDecryption(a_A, key_A);
+        System.out.println(CryptographyA.cryptoString(b_A));
+
 
         System.out.println("-------------------------");
         String key_B = "CONVENIENCE";
