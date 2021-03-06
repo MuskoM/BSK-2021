@@ -1,82 +1,58 @@
-import crypto1.Cryptography;
-import crypto1.CryptographyB;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-//import javafx.application.Application;
-//import javafx.event.ActionEvent;
-//import javafx.event.EventHandler;
-//import javafx.geometry.Insets;
-//import javafx.scene.Scene;
-//import javafx.scene.control.Button;
-//import javafx.scene.control.Label;
-//import javafx.scene.layout.HBox;
-//import javafx.scene.text.Font;
-//import javafx.scene.text.FontWeight;
-//import javafx.stage.Stage;
+import cw.AssignmentExercise;
+import cw.CW1;
+import cw.CW2;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+
+import javafx.stage.Stage;
 
 
-//public class BSK extends Application {
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-//
-//    @Override
-//    public void start(Stage primaryStage) {
-//
-//
-//
-//
-//        primaryStage.setTitle("Hello World!");
-//
-//        Button btn = new Button("_Button");
-//        var lbl = new Label("Simple JavaFX application.");
-//
-//        lbl.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
-//        btn.setText("Say 'Hello World'");
-//        btn.setOnAction(new EventHandler<ActionEvent>() {
-//
-//            @Override
-//            public void handle(ActionEvent event) {
-//                lbl.setText("Hello World");
-//            }
-//        });
-//
-//        HBox root = new HBox();
-//        root.setId("Root");
-//        root.setPadding(new Insets(25));
-//        root.getChildren().add(btn);
-//        root.getChildren().add(lbl);
-//        var scene = new Scene(root, 300, 250);
-//        scene.getStylesheets().add("style.css");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
-//}
+
+public class BSK extends Application {
 
 
-class BSK{
-    public static void main(String[] args) throws IOException {
-
-        System.out.println("-------------------------");
-        String key_B = "CONVENIENCE";
-        byte[] text_B = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
-
-        byte[] a = CryptographyB.calculateCrypto(key_B, text_B);
-        System.out.println(CryptographyB.cryptoString(a));
-        byte[] b = CryptographyB.calculateUnCrypto(key_B,a);
-        System.out.println(CryptographyB.cryptoString(b));
-        System.out.println("-------------------------");
-
-        int[] key = new int[]{4,3,5,2,1,6,7,8};
-
-        byte[] text = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
-
-        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption(text,key);
-        System.out.println(Cryptography.encryptedString(encryptedMessage));
-        byte[] decryptedMessage = Cryptography.offsetMatrixDecryption(encryptedMessage,key);
-        System.out.println(Cryptography.encryptedString(decryptedMessage));
+    public static void main(String[] args) {
+        launch(args);
     }
 
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Decryptor&Encryptor BSK-2021");
+        primaryStage.show();
+
+        //Zadanie 1
+        AssignmentExercise cw1 = new CW1();
+        Tab cw1Tab = cw1.createExecriseTab(primaryStage);
+
+        //Zadanie 2
+        AssignmentExercise cw2 = new CW2();
+        Tab cw2Tab = cw2.createExecriseTab(primaryStage);
+
+        TabPane tabPane = new TabPane(cw1Tab);
+        tabPane.getTabs().add(cw2Tab);
+        Scene scene = new Scene(tabPane,300,275);
+        primaryStage.setScene(scene);
+        scene.getStylesheets().add("./style.css");
+
+    }
+
+
+
 }
+
+
+//class BSK{
+//    public static void main(String[] args) throws IOException {
+//        int[] key = new int[]{4,3,5,2,1,6,7,8};
+//
+//        byte[] text = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
+//
+//        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption(text,key);
+//        System.out.println(Cryptography.encryptedString(encryptedMessage));
+//        byte[] decryptedMessage = Cryptography.offsetMatrixDecryption(encryptedMessage,key);
+//        System.out.println(Cryptography.encryptedString(decryptedMessage));
+//    }
+//
+//}
 
