@@ -6,8 +6,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class CryptographyA {
-    public static byte[] railFenceEncryption(byte[] input, int key) {
+public class CryptographyA  implements Cipher{
+
+    @Override
+    public byte[] encrypt(byte[] input, Object key) {
+        return railFenceEncryption(input, (int)key);
+    }
+
+    @Override
+    public byte[] decrypt(byte[] input, Object key) {
+        return railFenceDecryption(input, (int)key);
+    }
+
+    public byte[] railFenceEncryption(byte[] input, int key) {
         byte[][] encryptionMatrix = calculateEncryptionMatrix(input, key);
         byte[] encryptedSentence = new byte[input.length];
         int just_iterate = 0;
@@ -37,7 +48,7 @@ public class CryptographyA {
         return encryptedSentence;
     }
 
-    public static byte[] railFenceDecryption(byte[] input, int key) {
+    public byte[] railFenceDecryption(byte[] input, int key) {
         byte[][] decryptionMatrix = calculateEncryptionMatrix(input, key);
         byte[] decryptedSentence = new byte[input.length];
         int just_iterate = 0;
@@ -74,7 +85,7 @@ public class CryptographyA {
         return decryptedSentence;
     }
 
-    private static int getDistance(int iteration, int row, int size) {
+    private int getDistance(int iteration, int row, int size) {
         if (size == 0 || size == 1)
             return 1;
         else if (row == 0 || row == size - 1)
@@ -84,17 +95,17 @@ public class CryptographyA {
         else return row * 2;
     }
 
-    public static byte[][] calculateEncryptionMatrix(byte[] input, int key) {
+    public  byte[][] calculateEncryptionMatrix(byte[] input, int key) {
         int matrix_length = getMatrixLength(input.length, key);
 
         return new byte[key][matrix_length];
     }
 
-    private static int getMatrixLength(int input_length, int key) {
+    private  int getMatrixLength(int input_length, int key) {
         return (int) Math.ceil((float) input_length / (key - 1));
     }
 
-    public static String cryptoString(byte[] data) {
+    public String cryptoString(byte[] data) {
         return new String(data, StandardCharsets.UTF_8);
     }
 }

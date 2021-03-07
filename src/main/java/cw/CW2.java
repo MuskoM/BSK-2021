@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class CW2 implements AssignmentExercise{
@@ -57,7 +58,7 @@ public class CW2 implements AssignmentExercise{
             FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
-                inputLabel.setText(Cryptography.encryptedString(Arrays.copyOf(data[0],15)));
+                inputLabel.setText(new String(Arrays.copyOf(data[0], 150), StandardCharsets.UTF_8));
 
             }
         });

@@ -5,9 +5,19 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CryptographyB {
+public class CryptographyB implements Cipher {
 
-    private static int[] calculatedKey(String key){
+    @Override
+    public byte[] encrypt(byte[] input, Object key) {
+        return calculateCrypto((String) key, input);
+    }
+
+    @Override
+    public byte[] decrypt(byte[] input, Object key) {
+        return calculateUnCrypto((String) key, input);
+    }
+
+    private int[] calculatedKey(String key){
         int[] calculatedKey = new int[key.length()];
 
         char[] chars = key.toCharArray();
@@ -41,7 +51,7 @@ public class CryptographyB {
         return calculatedKey;
     }
 
-    private static int rows(String key, byte[] sentence){
+    private int rows(String key, byte[] sentence){
         int rows = 1;
         int keyLenght = key.length();
         int sentenceLenght = sentence.length;
@@ -52,7 +62,7 @@ public class CryptographyB {
         return rows;
     }
 
-    public static byte[] calculateCrypto(String key, byte[] sentence){
+    public byte[] calculateCrypto(String key, byte[] sentence){
 
         int rows = rows(key,sentence);
         int columns = key.length();
@@ -85,7 +95,7 @@ public class CryptographyB {
         return byte_crypto;
     }
 
-    public static byte[] calculateUnCrypto(String key, byte[] sentence){
+    public byte[] calculateUnCrypto(String key, byte[] sentence){
 
         int rows = rows(key,sentence);
         int columns = key.length();
@@ -119,7 +129,7 @@ public class CryptographyB {
         return byte_crypto;
     }
 
-    public static String cryptoString(byte[] cryptoData){
+    public String cryptoString(byte[] cryptoData){
         return new String(cryptoData, StandardCharsets.UTF_8);
     }
 }

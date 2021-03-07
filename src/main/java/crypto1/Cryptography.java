@@ -5,10 +5,20 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Cryptography {
+public class Cryptography implements Cipher{
+
+    @Override
+    public byte[] encrypt(byte[] input, Object key) {
+        return offsetMatrixDecryption(input,(int[])key);
+    }
+
+    @Override
+    public byte[] decrypt(byte[] input, Object key) {
+        return offsetMatrixEncryption(input,(int[])key);
+    }
 
     //Encrypting function using offsetMatrixEncryption
-    public static byte[] offsetMatrixEncryption(byte[] input, int[] key){
+    public byte[] offsetMatrixEncryption(byte[] input, int[] key){
         int maxKeyValue = Arrays.stream(key).max().getAsInt();
         int[] recalculatedKey = Arrays.stream(key).map(x-> x-1).toArray();
         byte[][] encryptionMatrix = calculateByteEncryptionMatrix(input,maxKeyValue);
@@ -31,7 +41,7 @@ public class Cryptography {
         return encryptedMessage;
     }
 
-    public static byte[] offsetMatrixDecryption(byte[] input, int[] key){
+    public byte[] offsetMatrixDecryption(byte[] input, int[] key){
 
         int x_max = Arrays.stream(key).max().getAsInt();
         byte[][] decryptionMatrix = calculateByteDecryptionMatrix(input,key);
@@ -52,11 +62,8 @@ public class Cryptography {
         return decryptedMessage;
     }
 
-    public static String encryptedString(byte[] encryptedData){
-        return new String(encryptedData,StandardCharsets.UTF_8);
-    }
 
-    private static byte[][] calculateByteDecryptionMatrix(byte[] input, int[] key){
+    private byte[][] calculateByteDecryptionMatrix(byte[] input, int[] key){
         int x_max = Arrays.stream(key).max().getAsInt();
         int y_max = calculateRowNumber(input,x_max);
         int[] recalculatedKey = Arrays.stream(key).map(x-> x-1).toArray();
@@ -78,7 +85,7 @@ public class Cryptography {
         return matrix;
     }
 
-    private static byte[][] calculateByteEncryptionMatrix(byte[] input, int x_max){
+    private byte[][] calculateByteEncryptionMatrix(byte[] input, int x_max){
 
         int y_max = calculateRowNumber(input,x_max);
 

@@ -1,6 +1,8 @@
 package cw;
 
+import crypto1.Cipher;
 import crypto1.Cryptography;
+import crypto1.CryptographyA;
 import crypto1.CryptographyB;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 
@@ -37,15 +40,22 @@ public class CW1 implements AssignmentExercise{
         bsk1.setContent(grid);
 
 
-        Text baseInfo = new Text("Function");
-        baseInfo.setFont(Font.font("Tahoma", FontWeight.NORMAL,20));
-        grid.add(baseInfo,0,0,2,1);
+        RadioButton railFenceRadioBtn = new RadioButton("RailFence");
+        RadioButton encrIntKeyRadioBtn = new RadioButton("Encr-intkey");
+        RadioButton encrStrKeyRadioBtn = new RadioButton("Encr-strkey");
 
-        Label inputTypeLabel = new Label("Choose input file");
-        grid.add(inputTypeLabel,0,1);
+        ToggleGroup encryptOptionGroup = new ToggleGroup();
+        railFenceRadioBtn.setToggleGroup(encryptOptionGroup);
+        encrIntKeyRadioBtn.setToggleGroup(encryptOptionGroup);
+        encrStrKeyRadioBtn.setToggleGroup(encryptOptionGroup);
+
+        HBox encrHbox = new HBox(railFenceRadioBtn,encrIntKeyRadioBtn,encrStrKeyRadioBtn);
+        railFenceRadioBtn.fire();
+        grid.add(encrHbox,0,1);
+
 
         Label inputLabel = new Label("Input data");
-        grid.add(inputLabel,0,2);
+        grid.add(inputLabel,0,3);
 
         final byte[][] data = {new byte[0]};
 
@@ -56,33 +66,62 @@ public class CW1 implements AssignmentExercise{
             if (file != null) {
                 try {
                     data[0] = readFile(file);
-                    inputLabel.setText(Cryptography.encryptedString(Arrays.copyOf(data[0],15)));
+                    inputLabel.setText(new String(Arrays.copyOf(data[0], 150),StandardCharsets.UTF_8));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        grid.add(openFileBtn,1,1);
+        grid.add(openFileBtn,0,2);
 
         Button encryptBtn = new Button("Encrypt");
         encryptBtn.setOnAction(actionEvent -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save as file");
             File file = fileChooser.showSaveDialog(primaryStage);
+            Cipher cipher = new Cryptography();
             if (file != null){
                 try {
                     byte[] file_data;
-                    int[] key = new int[]{4,3,5,2,1,6,7,8};
-                    if(WORKING_MODE.equals("Encrypt")){
+                    int[] arr_key = new int[]{4,3,5,2,1,6,7,8};
+                    int int_key = 3;
+                    String string_key = "BATMAN";
 
-                        file_data = CryptographyB.calculateCrypto("BATMAN",data[0]);
-                        writeFile(file,file_data);
+                    if (railFenceRadioBtn.equals(encryptOptionGroup.getSelectedToggle())) {
+                        cipher = new CryptographyA();
+                        if(WORKING_MODE.equals("Encrypt")){
+                            file_data = cipher.encrypt(data[0],int_key);
+                            writeFile(file,file_data);
 
-                    }else if(WORKING_MODE.equals("Decrypt")){
-                        file_data = CryptographyB.calculateUnCrypto("BATMAN",data[0]);
-                        writeFile(file,file_data);
+                        }else if(WORKING_MODE.equals("Decrypt")){
+                            file_data = cipher.decrypt(data[0],int_key);
+                            writeFile(file,file_data);
+                        }
                     }
+                    else if(encrIntKeyRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
+                        cipher = new Cryptography();
+                        if(WORKING_MODE.equals("Encrypt")){
+                            file_data = cipher.encrypt(data[0],arr_key);
+                            writeFile(file,file_data);
+
+                        }else if(WORKING_MODE.equals("Decrypt")){
+                            file_data = cipher.decrypt(data[0],arr_key);
+                            writeFile(file,file_data);
+                        }
+
+                    }else if(encrStrKeyRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
+                        cipher = new CryptographyB();
+                        if(WORKING_MODE.equals("Encrypt")){
+                            file_data = cipher.encrypt(data[0],string_key);
+                            writeFile(file,file_data);
+                        }else if(WORKING_MODE.equals("Decrypt")){
+                            file_data = cipher.decrypt(data[0],string_key);
+                            writeFile(file,file_data);
+                        }
+
+                    }
+
                 }catch (IOException e){
                     System.out.println(e.getMessage());
                 }
@@ -102,7 +141,7 @@ public class CW1 implements AssignmentExercise{
                     WORKING_MODE = functionLabels[new_val.intValue()];
                 }
         );
-        grid.add(functionChoiceBox,1,0);
+        grid.add(functionChoiceBox,0,0);
 
         return bsk1;
     }
