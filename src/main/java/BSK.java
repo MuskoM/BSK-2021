@@ -7,8 +7,6 @@ import javafx.scene.control.*;
 
 import javafx.stage.Stage;
 
-
-
 public class BSK extends Application {
 
 
@@ -31,7 +29,7 @@ public class BSK extends Application {
 
         TabPane tabPane = new TabPane(cw1Tab);
         tabPane.getTabs().add(cw2Tab);
-        Scene scene = new Scene(tabPane,300,275);
+        Scene scene = new Scene(tabPane,620,360);
         primaryStage.setScene(scene);
         scene.getStylesheets().add("./style.css");
 

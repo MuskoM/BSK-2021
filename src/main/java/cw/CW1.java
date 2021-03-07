@@ -39,7 +39,6 @@ public class CW1 implements AssignmentExercise{
 
         bsk1.setContent(grid);
 
-
         RadioButton railFenceRadioBtn = new RadioButton("RailFence");
         RadioButton encrIntKeyRadioBtn = new RadioButton("Encr-intkey");
         RadioButton encrStrKeyRadioBtn = new RadioButton("Encr-strkey");
@@ -73,7 +72,10 @@ public class CW1 implements AssignmentExercise{
             }
         });
 
-        grid.add(openFileBtn,0,2);
+        TextField keyInputArea = new TextField("Input key");
+        HBox userInputsHBox = new HBox(openFileBtn,keyInputArea);
+
+        grid.add(userInputsHBox,0,2);
 
         Button encryptBtn = new Button("Encrypt");
         encryptBtn.setOnAction(actionEvent -> {
@@ -84,12 +86,9 @@ public class CW1 implements AssignmentExercise{
             if (file != null){
                 try {
                     byte[] file_data;
-                    int[] arr_key = new int[]{4,3,5,2,1,6,7,8};
-                    int int_key = 3;
-                    String string_key = "BATMAN";
-
                     if (railFenceRadioBtn.equals(encryptOptionGroup.getSelectedToggle())) {
                         cipher = new CryptographyA();
+                        int int_key = UserInputToInt(keyInputArea.getText());
                         if(WORKING_MODE.equals("Encrypt")){
                             file_data = cipher.encrypt(data[0],int_key);
                             writeFile(file,file_data);
@@ -101,6 +100,7 @@ public class CW1 implements AssignmentExercise{
                     }
                     else if(encrIntKeyRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
                         cipher = new Cryptography();
+                        int[] arr_key = UserInputToIntArray(keyInputArea.getText());
                         if(WORKING_MODE.equals("Encrypt")){
                             file_data = cipher.encrypt(data[0],arr_key);
                             writeFile(file,file_data);
@@ -112,6 +112,7 @@ public class CW1 implements AssignmentExercise{
 
                     }else if(encrStrKeyRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
                         cipher = new CryptographyB();
+                        String string_key = keyInputArea.getText();
                         if(WORKING_MODE.equals("Encrypt")){
                             file_data = cipher.encrypt(data[0],string_key);
                             writeFile(file,file_data);
@@ -119,7 +120,6 @@ public class CW1 implements AssignmentExercise{
                             file_data = cipher.decrypt(data[0],string_key);
                             writeFile(file,file_data);
                         }
-
                     }
 
                 }catch (IOException e){
@@ -153,6 +153,19 @@ public class CW1 implements AssignmentExercise{
 
     public void writeFile(File file, byte[] data)throws IOException{
         Files.write(file.toPath(),data);
+    }
+
+    private int UserInputToInt(String input){
+        return Integer.parseInt(input);
+    }
+
+    private int[] UserInputToIntArray(String input){
+        int[] key = new int[input.length()];
+        for (int i=0;i<input.length();i++){
+            key[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+        }
+
+        return key;
     }
 
 }
