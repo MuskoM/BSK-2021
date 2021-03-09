@@ -1,11 +1,10 @@
 package crypto1;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Cryptography implements Cipher{
+public class Cryptography implements Cipher {
 
     @Override
     public byte[] encrypt(byte[] input, Object key) {

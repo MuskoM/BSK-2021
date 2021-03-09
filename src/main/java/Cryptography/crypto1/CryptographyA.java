@@ -3,10 +3,8 @@ package crypto1;
 // Rail Fence algorithm
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Iterator;
 
-public class CryptographyA  implements Cipher{
+public class CryptographyA  implements Cipher {
 
     @Override
     public byte[] encrypt(byte[] input, Object key) {
