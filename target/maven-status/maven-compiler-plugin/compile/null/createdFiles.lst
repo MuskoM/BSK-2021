@@ -1,4 +1,5 @@
 Cryptography\crypto2\CesarCipher.class
+utils\InputChecker.class
 Cryptography\crypto1\Cryptography.class
 BSK.class
 Cryptography\Cipher.class

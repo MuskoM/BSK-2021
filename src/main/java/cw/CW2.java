@@ -12,9 +12,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import utils.InputChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +29,9 @@ public class CW2 implements AssignmentExercise{
 
     @Override
     public Tab createExecriseTab(Stage primaryStage) {
-        final Pattern MatrixKeyInputPattern = Pattern.compile("^[A-z]{3,}$");
-        final Pattern CesarCipherKeyInputPattern = Pattern.compile("^[0-9]{1,4}$");
 
         String[] functionLabels  = new String[]{"Encrypt","Decrypt"};
+        InputChecker inputInfo = new InputChecker("");
         Tab bsk1 = new Tab("Ćw 2");
 
         GridPane grid = new GridPane();
@@ -62,44 +61,61 @@ public class CW2 implements AssignmentExercise{
 
         final byte[][] data = {new byte[0]};
 
-        Button openFileBtn = new Button("Select file...");
-        openFileBtn.setOnAction(actionEvent -> {
-            FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showOpenDialog(primaryStage);
-            if (file != null) {
-                try {
-                    data[0] = readFile(file);
-                    inputLabel.setText(new String(Arrays.copyOf(data[0], 150),StandardCharsets.UTF_8));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
-        TextField keyInputArea = new TextField("Input key");
-        Label inputInfo = new Label("");
+        TextField keyInputArea = new TextField();
         inputInfo.setId("input-checker");
         keyInputArea.textProperty().addListener(actionEvent -> {
             if (cesarCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())) {
-                if(CesarCipherKeyInputPattern.matcher(keyInputArea.getText()).matches()){
+                inputInfo.setCheckerPattern(Pattern.compile("^[0-9]{1,4}$"));
+                if(inputInfo.isInputCorrect(keyInputArea.getText())){
                     inputInfo.setText("OK!");
-                    inputInfo.setTextFill(Color.GREEN);
                 }else{
-                    inputInfo.setText("Wrong input!");
-                    inputInfo.setTextFill(Color.RED);
+                    inputInfo.setText("Wrong! Input a single number.");
                 }
             }else if(matrixEncryptionRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
-                if(MatrixKeyInputPattern.matcher(keyInputArea.getText()).matches()){
+                inputInfo.setCheckerPattern(Pattern.compile("^[A-z]{3,}$"));
+                if(inputInfo.isInputCorrect(keyInputArea.getText())){
                     inputInfo.setText("OK!");
-                    inputInfo.setTextFill(Color.GREEN);
                 }else{
-                    inputInfo.setText("Wrong input!");
-                    inputInfo.setTextFill(Color.RED);
+                    inputInfo.setText("Wrong! Input a string.");
                 }
             }else if(vigenereCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
-
+                inputInfo.setCheckerPattern(Pattern.compile("^[0-9]{1,4}$"));
+                if(inputInfo.isInputCorrect(keyInputArea.getText())){
+                    inputInfo.setText("OK!");
+                }else{
+                    inputInfo.setText("Wrong!");
+                }
             }
         });
+
+        Button openFileBtn = new Button("Select file...");
+        openFileBtn.setOnAction(actionEvent -> {
+            if(!inputInfo.isInputCorrect(keyInputArea.getText())){
+                try {
+                    throw new Exception();
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Something went wrong");
+                    alert.setHeaderText("There was an error during encryption/decryption");
+                    alert.setContentText("Probably your key is in a wrong format, try to input the correct key.");
+                    alert.showAndWait();
+                }
+            }else{
+                FileChooser fileChooser = new FileChooser();
+                File file = fileChooser.showOpenDialog(primaryStage);
+                if (file != null) {
+                    try {
+                        data[0] = readFile(file);
+                        inputLabel.setText(new String(Arrays.copyOf(data[0], 150),StandardCharsets.UTF_8));
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+
+        });
+
         HBox userInputsHBox = new HBox(openFileBtn,keyInputArea,inputInfo);
 
         grid.add(userInputsHBox,0,2);
@@ -149,8 +165,7 @@ public class CW2 implements AssignmentExercise{
                         }
                     }
 
-                }catch (IOException e){
-                    System.out.println(e.getMessage());
+                }catch (Exception e){
                 }
             }
         });
@@ -186,14 +201,7 @@ public class CW2 implements AssignmentExercise{
         return Integer.parseInt(input);
     }
 
-    private int[] UserInputToIntArray(String input){
-        int[] key = new int[input.length()];
-        for (int i=0;i<input.length();i++){
-            key[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
-        }
 
-        return key;
-    }
 
 }
 

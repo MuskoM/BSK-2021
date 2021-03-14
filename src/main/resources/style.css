@@ -3,6 +3,12 @@
     -fx-background-size: cover;
 }
 
+.radio-button{
+    -fx-padding: 2 4 4 4 4;
+}
+
+
+
 .button{
     -fx-text-fill: white;
     -fx-font-family: "Arial Narrow";
