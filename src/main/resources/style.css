@@ -14,3 +14,7 @@
 .button:hover {
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
+
+#input-checker{
+    -fx-padding: 3 6 6 6;
+}

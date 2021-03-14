@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class CesarCipherTest {
 
@@ -23,4 +24,14 @@ public class CesarCipherTest {
 
     }
 
+    @Test
+    void checkKeyRegex(){
+        final Pattern CesarCipherKeyInputPattern = Pattern.compile("^[0-9]{1,4}$");
+        String input="123";
+        if(!CesarCipherKeyInputPattern.matcher(input).matches()){
+            throw new IllegalArgumentException();
+        }else{
+            System.out.println("sprit");
+        }
+    }
 }

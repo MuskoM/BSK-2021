@@ -1,4 +1,6 @@
-package crypto1;
+package Cryptography.crypto2;
+
+import Cryptography.Cipher;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -8,7 +10,7 @@ public class CryptographyC implements Cipher {
 
     @Override
     public byte[] encrypt(byte[] input, Object key) {
-        return calculateCrypto((String) key, input);
+        return calculateCrypto((String)key, input);
     }
 
     @Override

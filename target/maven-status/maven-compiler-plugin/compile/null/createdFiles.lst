@@ -4,3 +4,4 @@ BSK.class
 Cryptography\Cipher.class
 Cryptography\crypto1\CryptographyB.class
 Cryptography\crypto1\CryptographyA.class
+Cryptography\crypto2\CryptographyC.class

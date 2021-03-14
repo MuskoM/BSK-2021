@@ -2,9 +2,9 @@ package cw;
 
 import Cryptography.Cipher;
 import Cryptography.crypto1.Cryptography;
-import Cryptography.crypto1.CryptographyA;
 import Cryptography.crypto1.CryptographyB;
 import Cryptography.crypto2.CesarCipher;
+import Cryptography.crypto2.CryptographyC;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -12,9 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -23,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class CW2 implements AssignmentExercise{
 
@@ -30,6 +29,9 @@ public class CW2 implements AssignmentExercise{
 
     @Override
     public Tab createExecriseTab(Stage primaryStage) {
+        final Pattern MatrixKeyInputPattern = Pattern.compile("^[A-z]{3,}$");
+        final Pattern CesarCipherKeyInputPattern = Pattern.compile("^[0-9]{1,4}$");
+
         String[] functionLabels  = new String[]{"Encrypt","Decrypt"};
         Tab bsk1 = new Tab("Ćw 2");
 
@@ -75,7 +77,30 @@ public class CW2 implements AssignmentExercise{
         });
 
         TextField keyInputArea = new TextField("Input key");
-        HBox userInputsHBox = new HBox(openFileBtn,keyInputArea);
+        Label inputInfo = new Label("");
+        inputInfo.setId("input-checker");
+        keyInputArea.textProperty().addListener(actionEvent -> {
+            if (cesarCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())) {
+                if(CesarCipherKeyInputPattern.matcher(keyInputArea.getText()).matches()){
+                    inputInfo.setText("OK!");
+                    inputInfo.setTextFill(Color.GREEN);
+                }else{
+                    inputInfo.setText("Wrong input!");
+                    inputInfo.setTextFill(Color.RED);
+                }
+            }else if(matrixEncryptionRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
+                if(MatrixKeyInputPattern.matcher(keyInputArea.getText()).matches()){
+                    inputInfo.setText("OK!");
+                    inputInfo.setTextFill(Color.GREEN);
+                }else{
+                    inputInfo.setText("Wrong input!");
+                    inputInfo.setTextFill(Color.RED);
+                }
+            }else if(vigenereCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
+
+            }
+        });
+        HBox userInputsHBox = new HBox(openFileBtn,keyInputArea,inputInfo);
 
         grid.add(userInputsHBox,0,2);
 
@@ -101,14 +126,14 @@ public class CW2 implements AssignmentExercise{
                         }
                     }
                     else if(matrixEncryptionRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
-                        cipher = new Cryptography();
-                        int[] arr_key = UserInputToIntArray(keyInputArea.getText());
+                        cipher = new CryptographyC();
+                        String string_key = keyInputArea.getText();
                         if(WORKING_MODE.equals("Encrypt")){
-                            file_data = cipher.encrypt(data[0],arr_key);
+                            file_data = cipher.encrypt(data[0],string_key);
                             writeFile(file,file_data);
 
                         }else if(WORKING_MODE.equals("Decrypt")){
-                            file_data = cipher.decrypt(data[0],arr_key);
+                            file_data = cipher.decrypt(data[0],string_key);
                             writeFile(file,file_data);
                         }
 
