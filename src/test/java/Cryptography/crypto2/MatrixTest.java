@@ -13,7 +13,7 @@ public class MatrixTest {
     @Test
     void checkCesarCipherEncryption(){
 
-        byte[] message = "Nienawidzę takich ludzi jak ona, co ja tatus przepchną".getBytes(StandardCharsets.UTF_8);
+        byte[] message = "THIS IS A TEST MESSAGE, THERE WAS NO HOSTILITY HERE".getBytes(StandardCharsets.UTF_8);
 
         byte[] output = cesar.encrypt(message,"KEY");
         byte[] decrypted = cesar.decrypt(output,"KEY");
