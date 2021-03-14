@@ -1,15 +1,15 @@
 package cw;
 
-import crypto1.Cryptography;
-import crypto1.CryptographyB;
+import Cryptography.Cipher;
+import Cryptography.crypto1.Cryptography;
+import Cryptography.crypto1.CryptographyA;
+import Cryptography.crypto1.CryptographyB;
+import Cryptography.crypto2.CesarCipher;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 public class CW2 implements AssignmentExercise{
@@ -40,16 +41,22 @@ public class CW2 implements AssignmentExercise{
 
         bsk1.setContent(grid);
 
+        RadioButton cesarCipherRadioBtn = new RadioButton("Cesar Cipher");
+        RadioButton matrixEncryptionRadioBtn = new RadioButton("Matrix encryption");
+        RadioButton vigenereCipherRadioBtn = new RadioButton("Vigenere Cipher");
 
-        Text baseInfo = new Text("Function");
-        baseInfo.setFont(Font.font("Tahoma", FontWeight.NORMAL,20));
-        grid.add(baseInfo,0,0,2,1);
+        ToggleGroup encryptOptionGroup = new ToggleGroup();
+        cesarCipherRadioBtn.setToggleGroup(encryptOptionGroup);
+        matrixEncryptionRadioBtn.setToggleGroup(encryptOptionGroup);
+        vigenereCipherRadioBtn.setToggleGroup(encryptOptionGroup);
 
-        Label inputTypeLabel = new Label("Choose input file");
-        grid.add(inputTypeLabel,0,1);
+        HBox encrHbox = new HBox(cesarCipherRadioBtn,matrixEncryptionRadioBtn,vigenereCipherRadioBtn);
+        cesarCipherRadioBtn.fire();
+        grid.add(encrHbox,0,1);
+
 
         Label inputLabel = new Label("Input data");
-        grid.add(inputLabel,0,2);
+        grid.add(inputLabel,0,3);
 
         final byte[][] data = {new byte[0]};
 
@@ -58,18 +65,69 @@ public class CW2 implements AssignmentExercise{
             FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
-                inputLabel.setText(new String(Arrays.copyOf(data[0], 150), StandardCharsets.UTF_8));
-
+                try {
+                    data[0] = readFile(file);
+                    inputLabel.setText(new String(Arrays.copyOf(data[0], 150),StandardCharsets.UTF_8));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
-        grid.add(openFileBtn,1,1);
+        TextField keyInputArea = new TextField("Input key");
+        HBox userInputsHBox = new HBox(openFileBtn,keyInputArea);
+
+        grid.add(userInputsHBox,0,2);
 
         Button encryptBtn = new Button("Encrypt");
         encryptBtn.setOnAction(actionEvent -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save as file");
             File file = fileChooser.showSaveDialog(primaryStage);
+            Cipher cipher = new Cryptography();
+            if (file != null){
+                try {
+                    byte[] file_data;
+                    if (cesarCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())) {
+                        cipher = new CesarCipher();
+                        int int_key = UserInputToInt(keyInputArea.getText());
+                        if(WORKING_MODE.equals("Encrypt")){
+                            file_data = cipher.encrypt(data[0],int_key);
+                            writeFile(file,file_data);
+
+                        }else if(WORKING_MODE.equals("Decrypt")){
+                            file_data = cipher.decrypt(data[0],int_key);
+                            writeFile(file,file_data);
+                        }
+                    }
+                    else if(matrixEncryptionRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
+                        cipher = new Cryptography();
+                        int[] arr_key = UserInputToIntArray(keyInputArea.getText());
+                        if(WORKING_MODE.equals("Encrypt")){
+                            file_data = cipher.encrypt(data[0],arr_key);
+                            writeFile(file,file_data);
+
+                        }else if(WORKING_MODE.equals("Decrypt")){
+                            file_data = cipher.decrypt(data[0],arr_key);
+                            writeFile(file,file_data);
+                        }
+
+                    }else if(vigenereCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
+                        cipher = new CryptographyB();
+                        String string_key = keyInputArea.getText();
+                        if(WORKING_MODE.equals("Encrypt")){
+                            file_data = cipher.encrypt(data[0],string_key);
+                            writeFile(file,file_data);
+                        }else if(WORKING_MODE.equals("Decrypt")){
+                            file_data = cipher.decrypt(data[0],string_key);
+                            writeFile(file,file_data);
+                        }
+                    }
+
+                }catch (IOException e){
+                    System.out.println(e.getMessage());
+                }
+            }
         });
 
         HBox hbBtn = new HBox();
@@ -85,9 +143,32 @@ public class CW2 implements AssignmentExercise{
                     WORKING_MODE = functionLabels[new_val.intValue()];
                 }
         );
-        grid.add(functionChoiceBox,1,0);
+        grid.add(functionChoiceBox,0,0);
 
         return bsk1;
     }
+
+    public byte[] readFile(File file) throws IOException {
+        byte[] text = Files.readAllBytes(file.toPath());
+        return text;
+    }
+
+    public void writeFile(File file, byte[] data)throws IOException{
+        Files.write(file.toPath(),data);
+    }
+
+    private int UserInputToInt(String input){
+        return Integer.parseInt(input);
+    }
+
+    private int[] UserInputToIntArray(String input){
+        int[] key = new int[input.length()];
+        for (int i=0;i<input.length();i++){
+            key[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+        }
+
+        return key;
+    }
+
 }
 

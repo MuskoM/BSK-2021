@@ -1,9 +1,10 @@
-package crypto1;
+package Cryptography.crypto1;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import Cryptography.Cipher;
 
 public class CryptographyB implements Cipher {
 

@@ -1,4 +1,4 @@
-package crypto1;
+package Cryptography.crypto1;
 
 public class CryptographyTest {
 

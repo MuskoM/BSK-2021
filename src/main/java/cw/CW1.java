@@ -1,9 +1,9 @@
 package cw;
 
-import crypto1.Cipher;
-import crypto1.Cryptography;
-import crypto1.CryptographyA;
-import crypto1.CryptographyB;
+import Cryptography.Cipher;
+import Cryptography.crypto1.Cryptography;
+import Cryptography.crypto1.CryptographyA;
+import Cryptography.crypto1.CryptographyB;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -11,9 +11,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 

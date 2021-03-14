@@ -1,8 +1,9 @@
-package crypto1;
+package Cryptography.crypto1;
 
 // Rail Fence algorithm
 
 import java.nio.charset.StandardCharsets;
+import Cryptography.Cipher;
 
 public class CryptographyA  implements Cipher {
 

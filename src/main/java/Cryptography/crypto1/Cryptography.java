@@ -1,8 +1,9 @@
-package crypto1;
+package Cryptography.crypto1;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import Cryptography.Cipher;
 
 public class Cryptography implements Cipher {
 

@@ -1,3 +1,6 @@
-crypto1/CryptographyA.class
-crypto1/Cipher.class
+Cryptography\crypto2\CesarCipher.class
+Cryptography\crypto1\Cryptography.class
 BSK.class
+Cryptography\Cipher.class
+Cryptography\crypto1\CryptographyB.class
+Cryptography\crypto1\CryptographyA.class
