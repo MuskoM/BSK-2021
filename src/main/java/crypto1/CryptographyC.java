@@ -57,6 +57,9 @@ public class CryptographyC implements Cipher {
         int column;
         int[] tab_temp = calculatedKey(key);
         while(temp <= sentence.length){
+            if(tab_temp[i] + 1 == 11){
+                i = 0;
+            }
             column = tab_temp[i] + 1;
             temp = temp + column;
             rows++;
@@ -70,9 +73,10 @@ public class CryptographyC implements Cipher {
         int columns = key.length();
         int[] keyTable = calculatedKey(key);
         byte[][] matrixCrypto = new byte[rows][columns];
+
         int x = 0;
         for(int i=0;i<rows;i++){
-            int temp = keyTable[i] + 1;
+            int temp = keyTable[i % keyTable.length] + 1;
             for(int j=0;j<temp;j++){
                 if(x < sentence.length){
                     matrixCrypto[i][j] = sentence[x];
@@ -105,9 +109,10 @@ public class CryptographyC implements Cipher {
         int columns = key.length();
         int[] keyTable = calculatedKey(key);
         boolean[][] truth_matrix = new boolean[rows][columns];
+
         int x = 0;
         for(int i=0;i<rows;i++){
-            int temp = keyTable[i] + 1;
+            int temp = keyTable[i % keyTable.length] + 1;
             for(int j=0;j<temp;j++){
                 if(x < sentence.length){
                     truth_matrix[i][j] = true;
