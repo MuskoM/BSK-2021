@@ -1,5 +1,7 @@
 package crypto1;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,9 +82,11 @@ public class CryptographyC implements Cipher {
             for(int j=0;j<temp;j++){
                 if(x < sentence.length){
                     matrixCrypto[i][j] = sentence[x];
+                    //System.out.print(matrixCrypto[i][j] + " ");
                     x++;
                 }
             }
+            //System.out.println();
         }
 
         int y;
@@ -91,6 +95,7 @@ public class CryptographyC implements Cipher {
             y = keyTable[i];
             for(int j=0;j<rows;j++){
                 if(matrixCrypto[j][y] != 0){
+                    //System.out.println(matrixCrypto[j][y]);
                     list_crypto.add(matrixCrypto[j][y]);
                 }
             }
@@ -139,12 +144,13 @@ public class CryptographyC implements Cipher {
         List<Byte> list_un_crypto = new LinkedList<>();
         for(int i=0;i<rows;i++){
             for(int j=0;j<columns;j++){
-                list_un_crypto.add(matrixunCrypto[i][j]);
+                if(matrixunCrypto[i][j] != 0)
+                    list_un_crypto.add(matrixunCrypto[i][j]);
             }
         }
 
         byte[] byte_un_crypto = new byte[list_un_crypto.size()];
-        for(int i=0;i< list_un_crypto.size();i++){
+        for(int i = 0; i < list_un_crypto.size() ; i++){
             byte_un_crypto[i] = list_un_crypto.get(i);
         }
 
