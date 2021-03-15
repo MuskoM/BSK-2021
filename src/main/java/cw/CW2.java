@@ -111,7 +111,7 @@ public class CW2 implements AssignmentExercise{
                             data[0] = readFile(file);
                             inputLabel.setText(new String(Arrays.copyOf(data[0], 150),StandardCharsets.UTF_8));
                         } catch (IOException e) {
-
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -155,6 +155,7 @@ public class CW2 implements AssignmentExercise{
                         String string_key = keyInputArea.getText();
                         if(WORKING_MODE.equals("Encrypt")){
                             file_data = cipher.encrypt(data[0],string_key);
+                            //sout -> file_data
                             writeFile(file,file_data);
 
                         }else if(WORKING_MODE.equals("Decrypt")){
@@ -178,6 +179,7 @@ public class CW2 implements AssignmentExercise{
                     }
 
                 }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
