@@ -60,7 +60,7 @@ public class CryptographyC implements Cipher {
         int column;
         int[] tab_temp = calculatedKey(key);
         while(temp <= sentence.length){
-            if(tab_temp[i] + 1 == 11){
+            if(tab_temp[i] + 1 == key.length()){
                 i = 0;
             }
             column = tab_temp[i] + 1;
