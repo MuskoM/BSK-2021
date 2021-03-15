@@ -6,6 +6,9 @@ public class VigenereCipher implements Cipher {
 
     private static byte[] genKey(byte[] input, byte[] key)
     {
+        if(input.length == key.length)
+            return key;
+
         byte[] new_key = new byte[input.length];
         int old_key_len = key.length;
         int old_key_iter = 0;
