@@ -2,7 +2,6 @@ package cw;
 
 import Cryptography.Cipher;
 import Cryptography.crypto1.Cryptography;
-import Cryptography.crypto1.CryptographyB;
 import Cryptography.crypto2.CesarCipher;
 import Cryptography.crypto2.CryptographyC;
 import Cryptography.crypto2.VigenereCipher;
@@ -15,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.ObjectUtils;
 import utils.InputChecker;
 
 import java.io.File;
@@ -92,27 +92,35 @@ public class CW2 implements AssignmentExercise{
 
         Button openFileBtn = new Button("Select file...");
         openFileBtn.setOnAction(actionEvent -> {
-            if(!inputInfo.isInputCorrect(keyInputArea.getText())){
-                try {
-                    throw new Exception();
-                } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Something went wrong");
-                    alert.setHeaderText("There was an error during encryption/decryption");
-                    alert.setContentText("Probably your key is in a wrong format, try to input the correct key.");
-                    alert.showAndWait();
-                }
-            }else{
-                FileChooser fileChooser = new FileChooser();
-                File file = fileChooser.showOpenDialog(primaryStage);
-                if (file != null) {
+            try{
+                if(!inputInfo.isInputCorrect(keyInputArea.getText())){
                     try {
-                        data[0] = readFile(file);
-                        inputLabel.setText(new String(Arrays.copyOf(data[0], 150),StandardCharsets.UTF_8));
-                    } catch (IOException e) {
+                        throw new Exception();
+                    } catch (Exception e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Something went wrong");
+                        alert.setHeaderText("There was an error during encryption/decryption");
+                        alert.setContentText("Probably your key is in a wrong format, try to input the correct key.");
+                        alert.showAndWait();
+                    }
+                }else{
+                    FileChooser fileChooser = new FileChooser();
+                    File file = fileChooser.showOpenDialog(primaryStage);
+                    if (file != null) {
+                        try {
+                            data[0] = readFile(file);
+                            inputLabel.setText(new String(Arrays.copyOf(data[0], 150),StandardCharsets.UTF_8));
+                        } catch (IOException e) {
 
+                        }
                     }
                 }
+            }catch (NullPointerException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Something went wrong");
+                alert.setHeaderText("There is an error with your key.");
+                alert.setContentText("Don't leave key field empty.");
+                alert.showAndWait();
             }
 
         });

@@ -21,7 +21,7 @@ public class InputChecker extends Label {
         super(s);
     }
 
-    public boolean isInputCorrect(String input) {
+    public boolean isInputCorrect(String input) throws NullPointerException {
         if(checkerPattern.matcher(input).matches()) {
             this.setTextFill(correctInputColor);
             return true;
