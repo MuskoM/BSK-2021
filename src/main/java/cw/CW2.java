@@ -81,7 +81,7 @@ public class CW2 implements AssignmentExercise{
                     inputInfo.setText("Wrong! Input a string.");
                 }
             }else if(vigenereCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
-                inputInfo.setCheckerPattern(Pattern.compile("^[0-9]{1,4}$"));
+                inputInfo.setCheckerPattern(Pattern.compile("^[A-z]{3,}$"));
                 if(inputInfo.isInputCorrect(keyInputArea.getText())){
                     inputInfo.setText("OK!");
                 }else{
@@ -158,10 +158,13 @@ public class CW2 implements AssignmentExercise{
                         cipher = new VigenereCipher();
                         String string_key = keyInputArea.getText();
                         if(WORKING_MODE.equals("Encrypt")){
-                            file_data = cipher.encrypt(data[0],string_key);
+                            System.out.println("Key " + string_key);
+                            file_data = cipher.encrypt(data[0],string_key.getBytes(StandardCharsets.UTF_8));
+                            System.out.println("File_data " + file_data);
                             writeFile(file,file_data);
                         }else if(WORKING_MODE.equals("Decrypt")){
-                            file_data = cipher.decrypt(data[0],string_key);
+                            file_data = cipher.decrypt(data[0],string_key.getBytes(StandardCharsets.UTF_8));
+                            System.out.println("File_data " + file_data);
                             writeFile(file,file_data);
                         }
                     }
