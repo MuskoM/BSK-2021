@@ -5,6 +5,7 @@ import Cryptography.crypto1.Cryptography;
 import Cryptography.crypto1.CryptographyB;
 import Cryptography.crypto2.CesarCipher;
 import Cryptography.crypto2.CryptographyC;
+import Cryptography.crypto2.VigenereCipher;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -154,7 +155,7 @@ public class CW2 implements AssignmentExercise{
                         }
 
                     }else if(vigenereCipherRadioBtn.equals(encryptOptionGroup.getSelectedToggle())){
-                        cipher = new CryptographyB();
+                        cipher = new VigenereCipher();
                         String string_key = keyInputArea.getText();
                         if(WORKING_MODE.equals("Encrypt")){
                             file_data = cipher.encrypt(data[0],string_key);
