@@ -10,7 +10,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.Executors.*;
 import javafx.stage.Stage;
 import utils.InputChecker;
 
@@ -29,7 +28,7 @@ public class CW3 implements AssignmentExercise {
     @Override
     public Tab createExecriseTab(Stage primaryStage) {
 
-        String[] functionLabels = new String[]{"Start", "Stop"};
+        String[] functionLabels = new String[]{"Step", "Initialize"};
         InputChecker inputInfo = new InputChecker("");
         Tab bsk1 = new Tab("Ćw 3");
 
@@ -45,16 +44,18 @@ public class CW3 implements AssignmentExercise {
         grid.add(randomNumberGeneratorLabel,0,0);
 
         Label inputLabel = new Label("Input data");
+        inputLabel.setWrapText(true);
+        inputLabel.setMaxWidth(grid.getMaxWidth()+300/2);
         grid.add(inputLabel, 0, 4);
 
         TextField keyInputArea = new TextField();
         inputInfo.setId("input-checker");
         keyInputArea.textProperty().addListener(actionEvent -> {
-                inputInfo.setCheckerPattern(Pattern.compile("([[x]\\d[?+]]{1,})"));
+                inputInfo.setCheckerPattern(Pattern.compile("^([0-9],?){1,}$"));
                 if (inputInfo.isInputCorrect(keyInputArea.getText())) {
                     inputInfo.setText("OK!");
                 } else {
-                    inputInfo.setText("Wrong! A polynomial ie. x1+x2+x3.");
+                    inputInfo.setText("Wrong! Input powers of a polynomial ie. x1+x2+x3 (1,2,3).");
                 }
         });
 
@@ -63,20 +64,24 @@ public class CW3 implements AssignmentExercise {
 
         grid.add(userInputsHBox, 0, 3);
         ExecutorService exec = Executors.newSingleThreadExecutor();
-        Button encryptBtn = new Button("Start");
+        Button encryptBtn = new Button("Step");
+        LFSR lfsr = new LFSR();
+
         encryptBtn.setOnAction(actionEvent -> {
-            LFSR lfsr = new LFSR(keyInputArea.getText());
             Future<Boolean[]> finalValue = exec.submit(lfsr);
-            if (WORKING_MODE.equals("Start")) {
+            if (WORKING_MODE.equals("Step")) {
                 try {
-                    inputLabel.setText(finalValue.get().toString());
+                    inputLabel.setText(booleanArrayToString(finalValue.get()));
                 } catch (InterruptedException e) {
+                    System.out.println("ERROR INTERRUPTED");
                     e.printStackTrace();
                 } catch (ExecutionException e) {
+                    System.out.println("ERROR EXEC");
                     e.printStackTrace();
                 }
-            } else if (WORKING_MODE.equals("Stop")) {
-                finalValue.cancel(true);
+            } else if (WORKING_MODE.equals("Initialize")) {
+                lfsr.setUserPolynomialInput(keyInputArea.getText());
+                lfsr.initialize();
             }
 
 //            FileChooser fileChooser = new FileChooser();
@@ -102,8 +107,8 @@ public class CW3 implements AssignmentExercise {
         hbBtn.getChildren().add(encryptBtn);
         grid.add(hbBtn, 1, 5);
 
-        ChoiceBox functionChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Start", "Stop"));
-        functionChoiceBox.setValue("Start");
+        ChoiceBox functionChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Step", "Initialize"));
+        functionChoiceBox.setValue("Step");
         functionChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
                     encryptBtn.setText(functionLabels[new_val.intValue()]);
@@ -128,6 +133,22 @@ public class CW3 implements AssignmentExercise {
 
     public void writeFile(File file, byte[] data) throws IOException {
         Files.write(file.toPath(), data);
+    }
+
+    public String booleanArrayToString(Boolean[] arr){
+        String cipherKey="";
+        for (int i = 0; i < arr.length ; i++) {
+            if(arr[i] == true){
+                cipherKey = cipherKey.concat("1");
+            }else{
+                cipherKey = cipherKey.concat("0");
+            }
+        }
+        if(cipherKey.length()>20){
+            return "..." + cipherKey.substring(cipherKey.length()-15);
+        }else{
+            return cipherKey;
+        }
     }
 
 

@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class LFSRTest {
-    LFSR lfsr = new LFSR("3,7,5");
+    LFSR lfsr = new LFSR();
 
     @Test
     void checkUserInputConversionCorrect(){
@@ -20,6 +20,8 @@ public class LFSRTest {
 
     @Test
     void checkCallable(){
+        lfsr.setUserPolynomialInput("3,7,5");
+        lfsr.initialize();
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Future<Boolean[]> score = executorService.submit(lfsr);
         Boolean[] futureNum;
@@ -34,6 +36,8 @@ public class LFSRTest {
 
     @Test
     void seedInitializationTest(){
+        lfsr.setUserPolynomialInput("3,7,5");
+        lfsr.initialize();
         lfsr.algorithm();
     }
 
