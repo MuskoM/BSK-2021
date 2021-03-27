@@ -1,6 +1,7 @@
 import cw.AssignmentExercise;
 import cw.CW1;
 import cw.CW2;
+import cw.CW3;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,8 +28,13 @@ public class BSK extends Application {
         AssignmentExercise cw2 = new CW2();
         Tab cw2Tab = cw2.createExecriseTab(primaryStage);
 
+        //Zadanie 3
+        AssignmentExercise cw3 = new CW3();
+        Tab cw3Tab = cw3.createExecriseTab(primaryStage);
+
         TabPane tabPane = new TabPane(cw1Tab);
         tabPane.getTabs().add(cw2Tab);
+        tabPane.getTabs().add(cw3Tab);
         Scene scene = new Scene(tabPane,620,360);
         primaryStage.setScene(scene);
         scene.getStylesheets().add("./style.css");
