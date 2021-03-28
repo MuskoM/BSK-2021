@@ -1,5 +1,7 @@
 package cw;
 
+import Cryptography.Cipher;
+import Cryptography.crypto1.Cryptography;
 import Cryptography.crypto3.LFSR;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -9,10 +11,17 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
+
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utils.InputChecker;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,11 +33,14 @@ import java.util.regex.Pattern;
 public class CW3 implements AssignmentExercise {
 
     private static String WORKING_MODE = "Start";
+    private static String WORKING_MODE_ENCRYPT = "Encrypt";
+    public BufferedImage img;
 
     @Override
     public Tab createExecriseTab(Stage primaryStage) {
 
         String[] functionLabels = new String[]{"Step", "Initialize"};
+        String[] functionLabelsEncrypt = new String[]{"Encrypt", "Decrypt"};
         InputChecker inputInfo = new InputChecker("");
         Tab bsk1 = new Tab("Ćw 3");
 
@@ -83,24 +95,60 @@ public class CW3 implements AssignmentExercise {
                 lfsr.setUserPolynomialInput(keyInputArea.getText());
                 lfsr.initialize();
             }
-
-//            FileChooser fileChooser = new FileChooser();
-//            fileChooser.setTitle("Save as file");
-//            File file = fileChooser.showSaveDialog(primaryStage);
-//            if (file != null) {
-//                try {
-//                    byte[] file_data;
-//                    if (WORKING_MODE.equals("Start")) {
-//                        lfsr.run();
-//                    } else if (WORKING_MODE.equals("Stop")) {
-//                        lfsr.stop();
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
         });
+
+        Button openFileBtn = new Button("Select file...");
+        openFileBtn.setOnAction(actionEvent -> {
+            try{
+                if(!inputInfo.isInputCorrect(keyInputArea.getText())){
+                    try {
+                        throw new Exception();
+                    } catch (Exception e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Something went wrong");
+                        alert.setHeaderText("There was an error during encryption/decryption");
+                        alert.setContentText("Probably your key is in a wrong format, try to input the correct key.");
+                        alert.showAndWait();
+                    }
+                }else{
+                    FileChooser fileChooser = new FileChooser();
+                    File file = fileChooser.showOpenDialog(primaryStage);
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    img = ImageIO.read(fileInputStream);
+                }
+            }catch (NullPointerException | IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Something went wrong");
+                alert.setHeaderText("There is an error with your key.");
+                alert.setContentText("Don't leave key field empty.");
+                alert.showAndWait();
+            }
+
+        });
+        grid.add(openFileBtn,1,3);
+
+        Button encryptButton = new Button("Encrypt");
+        encryptButton.setOnAction(actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save as file");
+            File file = fileChooser.showSaveDialog(primaryStage);
+            Cipher cipher = new Cryptography();
+            if (file != null && img != null) {
+                try {
+                    String key = inputLabel.getText();
+                    BufferedImage imageEncrypted;
+                    if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
+                        lfsr.encrypt(img,key,file);
+                    } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
+                        lfsr.decrypt(img,key,file);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        grid.add(encryptButton,1,4);
 
         HBox hbBtn = new HBox();
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
@@ -118,6 +166,17 @@ public class CW3 implements AssignmentExercise {
         grid.add(functionChoiceBox, 0, 1);
         final Separator genEncrSeparator = new Separator();
         grid.add(genEncrSeparator,0,6);
+
+        ChoiceBox functionChoiceBoxEncrypt = new ChoiceBox(FXCollections.observableArrayList("Encrypt", "Decrypt"));
+        functionChoiceBox.setValue("Encrypt");
+        functionChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+                    encryptButton.setText(functionLabelsEncrypt[new_val.intValue()]);
+                    WORKING_MODE_ENCRYPT = functionLabelsEncrypt[new_val.intValue()];
+                }
+        );
+
+        grid.add(functionChoiceBoxEncrypt, 1,1);
 
         Label streamCipherLabel = new Label("Stream Cipher");
         grid.add(streamCipherLabel,0,7);

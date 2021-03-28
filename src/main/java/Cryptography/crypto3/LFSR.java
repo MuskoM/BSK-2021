@@ -1,7 +1,12 @@
 package Cryptography.crypto3;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 public class LFSR implements Callable<Boolean[]> {
 
@@ -82,6 +87,58 @@ public class LFSR implements Callable<Boolean[]> {
             cipher.add(step());
         }
         return cipher.toArray(cipher.toArray(new Boolean[0]));
+    }
+
+    public void encrypt(BufferedImage image, String key, File file) throws IOException {
+        String stringKey = "";
+        for(int i=0;i<8;i++){
+            if(key.charAt(i) != '.') {
+                stringKey = stringKey + key.charAt(i);
+            }
+        }
+        int binaryKey = Integer.parseInt(stringKey,2);
+
+        for(int i=0;i<image.getHeight();i++){
+            for(int j=0;j<image.getWidth();j++){
+                int pixel = image.getRGB(j,i);
+                Color color = new Color(pixel, true);
+                int red = color.getRed();
+                int green = color.getGreen();
+                int blue = color.getBlue();
+                red = red ^ binaryKey;
+                green = green  ^ binaryKey;
+                blue = blue ^ binaryKey;
+                color = new Color(red, green, blue);
+                image.setRGB(j,i,color.getRGB());
+            }
+        }
+        ImageIO.write(image,"jpg",file);
+    }
+
+    public void decrypt(BufferedImage image, String key,File file) throws IOException {
+        String stringKey = "";
+        for(int i=0;i<8;i++){
+            if(key.charAt(i) != '.') {
+                stringKey = stringKey + key.charAt(i);
+            }
+        }
+        int binaryKey = Integer.parseInt(stringKey,2);
+
+        for(int i=0;i<image.getHeight();i++){
+            for(int j=0;j<image.getWidth();j++){
+                int pixel = image.getRGB(j,i);
+                Color color = new Color(pixel, true);
+                int red = color.getRed();
+                int green = color.getGreen();
+                int blue = color.getBlue();
+                red = red ^ binaryKey;
+                green = green  ^ binaryKey;
+                blue = blue ^ binaryKey;
+                color = new Color(red, green, blue);
+                image.setRGB(j,i,color.getRGB());
+            }
+        }
+        ImageIO.write(image,"jpg",file);
     }
 
 }
