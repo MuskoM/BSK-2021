@@ -3,6 +3,7 @@ package cw;
 import Cryptography.Cipher;
 import Cryptography.crypto1.Cryptography;
 import Cryptography.crypto3.LFSR;
+import Cryptography.crypto3.StreamCipher;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -29,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class CW3 implements AssignmentExercise {
 
@@ -132,15 +134,17 @@ public class CW3 implements AssignmentExercise {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save as file");
             File file = fileChooser.showSaveDialog(primaryStage);
-            Cipher cipher = new Cryptography();
+            StreamCipher cipher = new StreamCipher();
             if (file != null && img != null) {
                 try {
                     String key = inputLabel.getText();
                     BufferedImage imageEncrypted;
                     if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                        lfsr.encrypt(img,key,file);
+                        imageEncrypted = cipher.encrypt(img,key);
+                        ImageIO.write(imageEncrypted,"png",file);
                     } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                        lfsr.decrypt(img,key,file);
+                        imageEncrypted = cipher.decrypt(img,key);
+                        ImageIO.write(imageEncrypted,"png",file);
                     }
 
                 } catch (Exception e) {
