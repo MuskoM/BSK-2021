@@ -49,7 +49,7 @@ public class StreamCipher {
                 }
             }
         }
-        int[] temp1 = new int[key.length()-h];
+        temp1 = new int[key.length()-h];
         for(int i=0;i< temp1.length;i++){
             if(key.charAt(i) == 48){
                 temp1[i] = 0;

@@ -9,7 +9,9 @@ public class TextStreamCipher implements Cipher {
 
     @Override
     public byte[] encrypt(byte[] input, Object key) {
-        return cryptText(input, (String)key);
+        byte[] returnValue = cryptText(input, (String)key);
+        System.out.println("returnValue)");
+        return returnValue;
     }
 
     @Override

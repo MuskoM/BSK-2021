@@ -48,6 +48,8 @@ public class CW3 implements AssignmentExercise {
         InputChecker inputInfo = new InputChecker("");
         Tab bsk1 = new Tab("Ćw 3");
 
+        final byte[][] data = {new byte[0]};
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -88,7 +90,6 @@ public class CW3 implements AssignmentExercise {
             if (WORKING_MODE.equals("Step")) {
                 try {
                     inputLabel.setText(booleanArrayToString(finalValue.get()));
-                    System.out.println(booleanArrayToString(finalValue.get()));
                 } catch (InterruptedException e) {
                     System.out.println("ERROR INTERRUPTED");
                     e.printStackTrace();
@@ -141,7 +142,7 @@ public class CW3 implements AssignmentExercise {
                     File file = fileChooser.showOpenDialog(primaryStage);
                     FileInputStream fileInputStream = new FileInputStream(file);
                     img = ImageIO.read(fileInputStream);
-                    input = fileInputStream.readAllBytes();
+                    data[0] = readFile(file);
                 }
             }catch (NullPointerException | IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -166,15 +167,7 @@ public class CW3 implements AssignmentExercise {
                 try {
                     String key = inputLabel.getText();
 
-                    if (file.getName().split("\\.")[1].equals("txt")) {
-                        byte[] textEncrypted;
-                        if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                            textEncrypted = textcipher.encrypt(input,key);
-                            writeFile(file, textEncrypted);
-                        } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                            textEncrypted = textcipher.decrypt(input,key);
-                        }
-                    } else {
+                    if (file.getName().split("\\.")[1].equals("png") || file.getName().split("\\.")[1].equals("jpg")) {
                         BufferedImage imageEncrypted;
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
                             imageEncrypted = cipher.encrypt(img,key);
@@ -182,6 +175,15 @@ public class CW3 implements AssignmentExercise {
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
                             imageEncrypted = cipher.decrypt(img,key);
                             ImageIO.write(imageEncrypted,"png",file);
+                        }
+                    }else {
+                        byte[] textEncrypted;
+                        if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
+                            textEncrypted = textcipher.encrypt(data[0],key);
+                            writeFile(file, textEncrypted);
+                        } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
+                            textEncrypted = textcipher.decrypt(data[0],key);
+                            writeFile(file, textEncrypted);
                         }
                     }
 

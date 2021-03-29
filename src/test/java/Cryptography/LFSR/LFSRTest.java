@@ -55,4 +55,10 @@ public class LFSRTest {
         System.out.println("Dec: " + Arrays.toString(decrypted));
         Assertions.assertArrayEquals(input, decrypted);
     }
+
+    @Test
+    void checkIfFileIsTxt(){
+        Assertions.assertEquals("banana.txt".split("\\.")[1].equals("txt"),true);
+    }
+
 }
