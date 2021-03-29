@@ -1,11 +1,11 @@
 Cryptography\crypto2\CesarCipher.class
-utils\InputChecker.class
 Cryptography\crypto3\StreamCipher.class
-Cryptography\crypto3\LFSR.class
 Cryptography\crypto1\Cryptography.class
-cw\CW3.class
 BSK.class
-Cryptography\Cipher.class
 Cryptography\crypto1\CryptographyB.class
-Cryptography\crypto1\CryptographyA.class
 Cryptography\crypto2\CryptographyC.class
+utils\InputChecker.class
+Cryptography\crypto3\LFSR.class
+cw\CW3.class
+Cryptography\Cipher.class
+Cryptography\crypto1\CryptographyA.class

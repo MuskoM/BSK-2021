@@ -34,15 +34,15 @@ import java.util.stream.Stream;
 
 public class CW3 implements AssignmentExercise {
 
-    private static String WORKING_MODE = "Start";
+    private static String WORKING_MODE = "Initialize";
     private static String WORKING_MODE_ENCRYPT = "Encrypt";
     public BufferedImage img;
 
     @Override
     public Tab createExecriseTab(Stage primaryStage) {
 
+        //LFSR PART
         String[] functionLabels = new String[]{"Step", "Initialize"};
-        String[] functionLabelsEncrypt = new String[]{"Encrypt", "Decrypt"};
         InputChecker inputInfo = new InputChecker("");
         Tab bsk1 = new Tab("Ćw 3");
 
@@ -57,11 +57,12 @@ public class CW3 implements AssignmentExercise {
         Label randomNumberGeneratorLabel = new Label("Linear Feedback Shift Register");
         grid.add(randomNumberGeneratorLabel,0,0);
 
-        Label inputLabel = new Label("Input data");
+        Label inputLabel = new Label("Initialize algorithm");
         inputLabel.setWrapText(true);
-        inputLabel.setMaxWidth(grid.getMaxWidth()+300/2);
+        inputLabel.setMaxWidth(grid.getMaxWidth()+110);
         grid.add(inputLabel, 0, 4);
 
+        //User Input
         TextField keyInputArea = new TextField();
         inputInfo.setId("input-checker");
         keyInputArea.textProperty().addListener(actionEvent -> {
@@ -75,13 +76,12 @@ public class CW3 implements AssignmentExercise {
 
 
         HBox userInputsHBox = new HBox(keyInputArea, inputInfo);
-
         grid.add(userInputsHBox, 0, 3);
         ExecutorService exec = Executors.newSingleThreadExecutor();
-        Button encryptBtn = new Button("Step");
         LFSR lfsr = new LFSR();
 
-        encryptBtn.setOnAction(actionEvent -> {
+        Button lfsrFunctionBtn = new Button("Initialize");
+        lfsrFunctionBtn.setOnAction(actionEvent -> {
             Future<Boolean[]> finalValue = exec.submit(lfsr);
             if (WORKING_MODE.equals("Step")) {
                 try {
@@ -98,6 +98,27 @@ public class CW3 implements AssignmentExercise {
                 lfsr.initialize();
             }
         });
+
+        HBox hbBtn = new HBox();
+        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(lfsrFunctionBtn);
+        grid.add(hbBtn, 1, 4);
+
+        ChoiceBox functionChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Step", "Initialize"));
+        functionChoiceBox.setValue("Initialize");
+        functionChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+                    lfsrFunctionBtn.setText(functionLabels[new_val.intValue()]);
+                    WORKING_MODE = functionLabels[new_val.intValue()];
+                }
+        );
+        grid.add(functionChoiceBox, 0, 1);
+        final Separator genEncrSeparator = new Separator();
+        grid.add(genEncrSeparator,0,6);
+
+
+        //STREAM CIPHER PART
+        String[] functionLabelsEncrypt = new String[]{"Encrypt", "Decrypt"};
 
         Button openFileBtn = new Button("Select file...");
         openFileBtn.setOnAction(actionEvent -> {
@@ -127,8 +148,9 @@ public class CW3 implements AssignmentExercise {
             }
 
         });
-        grid.add(openFileBtn,1,3);
+        grid.add(openFileBtn,0,9);
 
+        //Encrypt Button
         Button encryptButton = new Button("Encrypt");
         encryptButton.setOnAction(actionEvent -> {
             FileChooser fileChooser = new FileChooser();
@@ -152,35 +174,19 @@ public class CW3 implements AssignmentExercise {
                 }
             }
         });
-        grid.add(encryptButton,1,4);
+        grid.add(encryptButton,1,9);
 
-        HBox hbBtn = new HBox();
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(encryptBtn);
-        grid.add(hbBtn, 1, 5);
-
-        ChoiceBox functionChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Step", "Initialize"));
-        functionChoiceBox.setValue("Step");
-        functionChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
-                (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
-                    encryptBtn.setText(functionLabels[new_val.intValue()]);
-                    WORKING_MODE = functionLabels[new_val.intValue()];
-                }
-        );
-        grid.add(functionChoiceBox, 0, 1);
-        final Separator genEncrSeparator = new Separator();
-        grid.add(genEncrSeparator,0,6);
 
         ChoiceBox functionChoiceBoxEncrypt = new ChoiceBox(FXCollections.observableArrayList("Encrypt", "Decrypt"));
-        functionChoiceBox.setValue("Encrypt");
-        functionChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+        functionChoiceBoxEncrypt.setValue("Encrypt");
+        functionChoiceBoxEncrypt.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
                     encryptButton.setText(functionLabelsEncrypt[new_val.intValue()]);
                     WORKING_MODE_ENCRYPT = functionLabelsEncrypt[new_val.intValue()];
                 }
         );
 
-        grid.add(functionChoiceBoxEncrypt, 1,1);
+        grid.add(functionChoiceBoxEncrypt, 0,8);
 
         Label streamCipherLabel = new Label("Stream Cipher");
         grid.add(streamCipherLabel,0,7);

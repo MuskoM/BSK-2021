@@ -1,12 +1,8 @@
 package Cryptography.crypto3;
 
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+
 
 public class LFSR implements Callable<Boolean[]> {
 
