@@ -10,6 +10,7 @@ public class LFSR implements Callable<Boolean[]> {
     private boolean[] seed;
     private Integer[] taps;
     LinkedList<Boolean> cipher = new LinkedList<>();
+    LinkedList<Boolean> cipherKey = new LinkedList<>();
 
 
     public void setUserPolynomialInput(String userPolynomialInput) {
@@ -64,6 +65,7 @@ public class LFSR implements Callable<Boolean[]> {
         }
 
         seed = shiftedSeed;
+        cipher.add(returnBit);
         return returnBit;
     }
 
@@ -77,11 +79,9 @@ public class LFSR implements Callable<Boolean[]> {
     }
 
     public Boolean[] algorithm(int arraylength){
-//        initalizeSeed(convertUserInput(userPolynomialInput));
-        boolean[] res = new boolean[arraylength];
         for (int i = 0; i < arraylength; i++) {
-            cipher.add(step());
+            cipherKey.add(step());
         }
-        return cipher.toArray(cipher.toArray(new Boolean[0]));
+        return cipherKey.toArray(cipher.toArray(new Boolean[0]));
     }
 }

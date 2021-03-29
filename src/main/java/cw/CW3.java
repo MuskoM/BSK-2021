@@ -88,6 +88,7 @@ public class CW3 implements AssignmentExercise {
             if (WORKING_MODE.equals("Step")) {
                 try {
                     inputLabel.setText(booleanArrayToString(finalValue.get()));
+                    System.out.println(booleanArrayToString(finalValue.get()));
                 } catch (InterruptedException e) {
                     System.out.println("ERROR INTERRUPTED");
                     e.printStackTrace();
