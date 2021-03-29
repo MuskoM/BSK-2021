@@ -1,6 +1,7 @@
 package Cryptography.LFSR;
 
 import Cryptography.crypto3.LFSR;
+import Cryptography.crypto3.TextStreamCipher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -41,4 +42,13 @@ public class LFSRTest {
         lfsr.algorithm();
     }
 
+    @Test
+    void textEncryptionTest() {
+        TextStreamCipher txtcipher = new TextStreamCipher();
+        byte[] input = "In Poland we say Mr. Keyboard and I think it's beautiful.".getBytes();
+        String key = "3,5,7"; //najlepszy radiowy adres na świecie
+        byte[] encrypted = txtcipher.encrypt(input, key);
+        byte[] decrypted = txtcipher.decrypt(encrypted, key);
+        Assertions.assertArrayEquals(input, decrypted);
+    }
 }
