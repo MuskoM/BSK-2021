@@ -2,9 +2,6 @@ package Cryptography.crypto3;
 
 import Cryptography.Cipher;
 
-import java.util.Arrays;
-import java.util.BitSet;
-
 public class TextStreamCipher implements Cipher {
 
     @Override
@@ -18,26 +15,53 @@ public class TextStreamCipher implements Cipher {
     }
 
     private byte[] cryptText(byte[] input, String key) {
-        BitSet calculatedByte, bigKey;
-        Boolean[] temp = new Boolean[8];
+        boolean[] calculatedByte;
+        boolean[] bigKey;
+        byte[] result = new byte[input.length];;
         LFSR lfsr = new LFSR();
         lfsr.setUserPolynomialInput(key);
         lfsr.initialize();
 
         for (int i = 0; i < input.length; i++) {
-            calculatedByte = BitSet.valueOf(new byte [] {input[i]});
-            bigKey = new BitSet(8);
-            temp = lfsr.algorithm();
+            calculatedByte = convertByteToBooleanArray(input[i]);
+            bigKey = new boolean[8];
+            bigKey = convertObjectShitToOldschoolArray(lfsr.algorithm());
             for (int j = 0; j < 8; j++) {
-                bigKey.set(j, temp[j]);
+                calculatedByte[j] = calculatedByte[j] ^ bigKey[j];
             }
-
-            calculatedByte.xor(bigKey);
-            input[i] = calculatedByte.toByteArray()[0];
+            result[i] = convertBooleanArrayToByte(calculatedByte);
         }
 
-        return input;
+        return result;
     }
 
+    private boolean[] convertByteToBooleanArray(byte input) {
+        boolean[] result = new boolean[8];
+
+        //holy fuck
+        result[7] = ((input & 0x01) != 0);
+        result[6] = ((input & 0x02) != 0);
+        result[5] = ((input & 0x04) != 0);
+        result[4] = ((input & 0x08) != 0);
+        result[3] = ((input & 0x10) != 0);
+        result[2] = ((input & 0x20) != 0);
+        result[1] = ((input & 0x40) != 0);
+        result[0] = ((input & 0x80) != 0);
+
+        return result;
+    }
+
+    private byte convertBooleanArrayToByte(boolean[] input) {
+        return (byte)((input[0]?1<<7:0) + (input[1]?1<<6:0) + (input[2]?1<<5:0) + (input[3]?1<<4:0) + (input[4]?1<<3:0)
+                + (input[5]?1<<2:0) + (input[6]?1<<1:0) + (input[7]?1:0));
+    }
+
+    private boolean[] convertObjectShitToOldschoolArray(Boolean[] input) {
+        boolean[] result = new boolean[8];
+        for (int i = 0; i < 8; i++) {
+            result[i] = input[i].booleanValue();
+        }
+        return result;
+    }
 
 }

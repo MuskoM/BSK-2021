@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Struct;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,6 +50,9 @@ public class LFSRTest {
         String key = "3,5,7"; //najlepszy radiowy adres na świecie
         byte[] encrypted = txtcipher.encrypt(input, key);
         byte[] decrypted = txtcipher.decrypt(encrypted, key);
+        System.out.println("Inp: " + Arrays.toString(input));
+        System.out.println("Enc: " + Arrays.toString(encrypted));
+        System.out.println("Dec: " + Arrays.toString(decrypted));
         Assertions.assertArrayEquals(input, decrypted);
     }
 }

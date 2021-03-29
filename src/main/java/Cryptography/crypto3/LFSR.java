@@ -79,6 +79,7 @@ public class LFSR implements Callable<Boolean[]> {
 
     public Boolean[] algorithm(){
         initalizeSeed(convertUserInput(userPolynomialInput));
+        boolean[] res = new boolean[8];
         for (int i = 0; i < 8; i++) {
             cipher.add(step());
         }

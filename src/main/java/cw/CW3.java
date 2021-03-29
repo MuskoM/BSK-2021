@@ -4,6 +4,7 @@ import Cryptography.Cipher;
 import Cryptography.crypto1.Cryptography;
 import Cryptography.crypto3.LFSR;
 import Cryptography.crypto3.StreamCipher;
+import Cryptography.crypto3.TextStreamCipher;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -37,6 +38,7 @@ public class CW3 implements AssignmentExercise {
     private static String WORKING_MODE = "Initialize";
     private static String WORKING_MODE_ENCRYPT = "Encrypt";
     public BufferedImage img;
+    public byte[] input;
 
     @Override
     public Tab createExecriseTab(Stage primaryStage) {
@@ -138,6 +140,7 @@ public class CW3 implements AssignmentExercise {
                     File file = fileChooser.showOpenDialog(primaryStage);
                     FileInputStream fileInputStream = new FileInputStream(file);
                     img = ImageIO.read(fileInputStream);
+                    input = fileInputStream.readAllBytes();
                 }
             }catch (NullPointerException | IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -157,17 +160,30 @@ public class CW3 implements AssignmentExercise {
             fileChooser.setTitle("Save as file");
             File file = fileChooser.showSaveDialog(primaryStage);
             StreamCipher cipher = new StreamCipher();
+            TextStreamCipher textcipher = new TextStreamCipher();
             if (file != null && img != null) {
                 try {
                     String key = inputLabel.getText();
-                    BufferedImage imageEncrypted;
-                    if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                        imageEncrypted = cipher.encrypt(img,key);
-                        ImageIO.write(imageEncrypted,"png",file);
-                    } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                        imageEncrypted = cipher.decrypt(img,key);
-                        ImageIO.write(imageEncrypted,"png",file);
+
+                    if (file.getName().split("\\.")[1].equals("txt")) {
+                        byte[] textEncrypted;
+                        if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
+                            textEncrypted = textcipher.encrypt(input,key);
+                            writeFile(file, textEncrypted);
+                        } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
+                            textEncrypted = textcipher.decrypt(input,key);
+                        }
+                    } else {
+                        BufferedImage imageEncrypted;
+                        if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
+                            imageEncrypted = cipher.encrypt(img,key);
+                            ImageIO.write(imageEncrypted,"png",file);
+                        } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
+                            imageEncrypted = cipher.decrypt(img,key);
+                            ImageIO.write(imageEncrypted,"png",file);
+                        }
                     }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
