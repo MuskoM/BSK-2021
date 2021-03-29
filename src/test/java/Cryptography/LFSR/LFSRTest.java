@@ -40,7 +40,7 @@ public class LFSRTest {
     void seedInitializationTest(){
         lfsr.setUserPolynomialInput("3,7,5");
         lfsr.initialize();
-        lfsr.algorithm();
+        lfsr.algorithm(12);
     }
 
     @Test
