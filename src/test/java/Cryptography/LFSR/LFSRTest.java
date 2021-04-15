@@ -47,7 +47,7 @@ public class LFSRTest {
     void textEncryptionTest() {
         TextStreamCipher txtcipher = new TextStreamCipher();
         byte[] input = "In Poland we say Mr. Keyboard and I think it's beautiful.".getBytes();
-        String key = "3,5,7"; //najlepszy radiowy adres na świecie
+        String key = "3,5,7";
         byte[] encrypted = txtcipher.encrypt(input, key);
         byte[] decrypted = txtcipher.decrypt(encrypted, key);
         System.out.println("Inp: " + Arrays.toString(input));

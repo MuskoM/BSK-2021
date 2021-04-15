@@ -1,5 +1,7 @@
 package Cryptography.crypto1;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -16,6 +18,16 @@ public class CryptographyB implements Cipher {
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return calculateUnCrypto((String) key, input);
+    }
+
+    @Override
+    public byte[] readFile(File file) throws IOException {
+        return new byte[0];
+    }
+
+    @Override
+    public void writeFile(File file, byte[] data) throws IOException {
+
     }
 
     private int[] calculatedKey(String key){

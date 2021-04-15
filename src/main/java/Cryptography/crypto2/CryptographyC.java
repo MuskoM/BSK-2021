@@ -3,6 +3,8 @@ package Cryptography.crypto2;
 import Cryptography.Cipher;
 import org.apache.commons.lang3.ObjectUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +19,16 @@ public class CryptographyC implements Cipher {
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return calculateUnCrypto((String) key, input);
+    }
+
+    @Override
+    public byte[] readFile(File file) throws IOException {
+        return new byte[0];
+    }
+
+    @Override
+    public void writeFile(File file, byte[] data) throws IOException {
+
     }
 
     private int[] calculatedKey(String key){

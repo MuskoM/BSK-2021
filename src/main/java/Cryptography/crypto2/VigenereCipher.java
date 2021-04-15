@@ -2,6 +2,9 @@ package Cryptography.crypto2;
 
 import Cryptography.Cipher;
 
+import java.io.File;
+import java.io.IOException;
+
 public class VigenereCipher implements Cipher {
 
     private static byte[] genKey(byte[] input, byte[] key)
@@ -81,5 +84,15 @@ public class VigenereCipher implements Cipher {
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return vigenereDecrypt(input, (byte[]) key);
+    }
+
+    @Override
+    public byte[] readFile(File file) throws IOException {
+        return new byte[0];
+    }
+
+    @Override
+    public void writeFile(File file, byte[] data) throws IOException {
+
     }
 }

@@ -2,6 +2,9 @@ package Cryptography.crypto3;
 
 import Cryptography.Cipher;
 
+import java.io.File;
+import java.io.IOException;
+
 public class TextStreamCipher implements Cipher {
 
     LFSR lsf = new LFSR();
@@ -17,6 +20,16 @@ public class TextStreamCipher implements Cipher {
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return cryptText(input, (String)key);
+    }
+
+    @Override
+    public byte[] readFile(File file) throws IOException {
+        return new byte[0];
+    }
+
+    @Override
+    public void writeFile(File file, byte[] data) throws IOException {
+
     }
 
     private byte[] cryptText(byte[] input, String userKey) {

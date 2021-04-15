@@ -1,7 +1,4 @@
-import cw.AssignmentExercise;
-import cw.CW1;
-import cw.CW2;
-import cw.CW3;
+import cw.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -31,6 +28,10 @@ public class BSK extends Application {
         //Zadanie 3
         AssignmentExercise cw3 = new CW3();
         Tab cw3Tab = cw3.createExecriseTab(primaryStage);
+
+        //Zadanie 4 - DES
+        AssignmentExercise cw4 = new CW4();
+        Tab cw4Tab = cw4.createExecriseTab(primaryStage);
 
         TabPane tabPane = new TabPane(cw1Tab);
         tabPane.getTabs().add(cw2Tab);

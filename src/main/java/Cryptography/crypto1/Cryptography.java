@@ -1,5 +1,7 @@
 package Cryptography.crypto1;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +17,16 @@ public class Cryptography implements Cipher {
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return offsetMatrixEncryption(input,(int[])key);
+    }
+
+    @Override
+    public byte[] readFile(File file) throws IOException {
+        return new byte[0];
+    }
+
+    @Override
+    public void writeFile(File file, byte[] data) throws IOException {
+
     }
 
     //Encrypting function using offsetMatrixEncryption

@@ -2,6 +2,9 @@ package Cryptography.crypto2;
 
 import Cryptography.Cipher;
 
+import java.io.File;
+import java.io.IOException;
+
 public class CesarCipher implements Cipher {
 
     @Override
@@ -12,6 +15,16 @@ public class CesarCipher implements Cipher {
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return decryptWithCesarCipher(input,(int)key);
+    }
+
+    @Override
+    public byte[] readFile(File file) throws IOException {
+        return new byte[0];
+    }
+
+    @Override
+    public void writeFile(File file, byte[] data) throws IOException {
+
     }
 
     private byte[] encryptWithCesarCipher(byte[] input, int key){
