@@ -31,7 +31,7 @@ public class ReadWriteTest {
 
     @Test
     public void divideKeyTest(){
-        Map map = des.divideKey(des.generateKey());
+        Map map = des.divideKey(des.generateBaseKey());
         Bits leftHalf = (Bits) map.get("L");
         Bits rightHalf = (Bits) map.get("R");
         Bits wholeKey = (Bits) map.get("Whole");
@@ -43,6 +43,15 @@ public class ReadWriteTest {
         Assertions.assertEquals(leftHalf.get(0),wholeKey.get(56));
         Assertions.assertEquals(rightHalf.get(0),wholeKey.get(62));
         Assertions.assertEquals(rightHalf.get(27),wholeKey.get(3));
+
+    }
+
+    @Test
+    public void generate16KeysTest(){
+        Map map = des.divideKey(des.generateBaseKey());
+        Map keys16 = des.generate16Keys(map);
+
+        keys16.forEach((o, o2) -> System.out.println(o + " " + o2));
 
     }
 

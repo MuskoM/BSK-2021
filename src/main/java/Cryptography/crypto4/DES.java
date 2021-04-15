@@ -19,7 +19,7 @@ public class DES implements Cipher {
     }
 
     public Map dk(){
-        Bits generatedKey = generateKey();
+        Bits generatedKey = generateBaseKey();
         Map <String,Bits> map = divideKey(generatedKey);
         return map;
     }
@@ -29,7 +29,7 @@ public class DES implements Cipher {
         return new byte[0];
     }
 
-    public Bits generateKey(){
+    public Bits generateBaseKey(){
         Bits key;
         LFSR lfsr = new LFSR();
         lfsr.setUserPolynomialInput("4,8,3");
@@ -37,6 +37,31 @@ public class DES implements Cipher {
         Boolean[] lfsrGeneneratedKey = lfsr.algorithm(64);
         key = Bits.boolToBitSet(lfsrGeneneratedKey);
         return key;
+    }
+
+    public Map<Integer,Bits> generate16Keys(Map keyHalfs){
+        Map<Integer,Bits> keys = new HashMap<>();
+
+        System.out.println("Base: " + keyHalfs.get("L"));
+        for (int i = 0; i < 16 ; i++) {
+            offsetBits((Bits) keyHalfs.get("L"),TabularData.offsetTable[i]);
+            offsetBits((Bits) keyHalfs.get("R"),TabularData.offsetTable[i]);
+
+            keys.put(keys.size(),offsetBits((Bits) keyHalfs.get("L"),TabularData.offsetTable[i]));
+        }
+
+
+        return keys;
+    }
+
+    public Bits offsetBits(Bits bits, int offset){
+        Bits offsetBits = new Bits(bits.length());
+
+        for (int i = 0; i < bits.length(); i++) {
+            offsetBits.set((i+offset)%bits.length(),bits.get(i));
+        }
+
+        return offsetBits;
     }
 
     public Map divideKey(Bits key){
