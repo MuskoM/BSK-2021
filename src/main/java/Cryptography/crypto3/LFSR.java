@@ -41,13 +41,7 @@ public class LFSR implements Callable<Boolean[]> {
     }
 
     private boolean step(){
-        for (int i = 0; i < seed.length ; i++) {
-
-            System.out.print(" [" + i + "]" + ": " + seed[i]);
-
-        }
         boolean returnBit = seed[seed.length-1];
-        System.out.println(" Return bit " + returnBit);
         boolean[] shiftedSeed = new boolean[seed.length];
         boolean xoredBits=seed[taps[0]];
 

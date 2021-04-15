@@ -1,10 +1,13 @@
 package Cryptography.crypto4;
 
 import Cryptography.Cipher;
+import Cryptography.crypto3.LFSR;
+import utils.Bits;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.*;
 
 public class DES implements Cipher {
 
@@ -15,9 +18,53 @@ public class DES implements Cipher {
         return new byte[0];
     }
 
+    public Map dk(){
+        Bits generatedKey = generateKey();
+        Map <String,Bits> map = divideKey(generatedKey);
+        return map;
+    }
+
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return new byte[0];
+    }
+
+    public Bits generateKey(){
+        Bits key;
+        LFSR lfsr = new LFSR();
+        lfsr.setUserPolynomialInput("4,8,3");
+        lfsr.initialize();
+        Boolean[] lfsrGeneneratedKey = lfsr.algorithm(64);
+        key = Bits.boolToBitSet(lfsrGeneneratedKey);
+        return key;
+    }
+
+    public Map divideKey(Bits key){
+        Map keyHalfs = new HashMap<String,Bits>();
+        Bits leftHalf = new Bits(28);
+        Bits rightHalf = new Bits(28);
+        int counter = 0;
+        Boolean b;
+
+        for (int i = 0; i < TabularData.PC_1.length ; i++) {
+            for (int j = 0; j < TabularData.PC_1[i].length ; j++) {
+                if(i<4){ //LEFT HALF OF THE KEY
+                    b = key.get(TabularData.PC_1[i][j]-1);
+                    leftHalf.set(counter,b);
+                    counter++;
+                    if(counter==28)
+                        counter = 0;
+                }else{ //RIGHT HALF OF THE KEY
+                    b = key.get(TabularData.PC_1[i][j]-1);
+                    rightHalf.set(counter,b);
+                    counter++;
+                }
+            }
+        }
+        keyHalfs.put("L",leftHalf);
+        keyHalfs.put("R",rightHalf);
+        keyHalfs.put("Whole",key);
+        return keyHalfs;
     }
 
     public byte[] readFile(File file) throws IOException {
@@ -38,13 +85,6 @@ public class DES implements Cipher {
             }
             return filledText;
         }
-    }
-
-    private byte[] generateKey(){
-        byte[] key = new byte[64];
-
-
-        return key;
     }
 
     public void writeFile(File file, byte[] data)throws IOException{
