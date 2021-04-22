@@ -20,7 +20,31 @@ public class Bits extends BitSet {
             bitset.set(i,b);
         }
 
+        System.out.println("Bits > Bitset.length " + bits.length);
         return bitset;
+    }
+
+    public static Bits concatBits(Bits b1,Bits b2){
+        Bits joinedBits = new Bits(b1.length() + b2.length());
+        int counter = 0;
+
+        for (int i = 0; i < joinedBits.length();i++){
+
+            if(i < b1.length()){
+                joinedBits.set(i,b1.get(counter));
+                counter++;
+            }
+            if(counter == b1.length()){
+                counter = 0;
+            }
+            if(i >= b1.length()){
+                joinedBits.set(i,b2.get(counter));
+                counter++;
+            }
+
+        }
+
+        return joinedBits;
     }
 
     @Override
@@ -34,5 +58,10 @@ public class Bits extends BitSet {
                         StringBuilder::append
                 )
                 .toString();
+    }
+
+    @Override
+    public int length() {
+        return noBits;
     }
 }

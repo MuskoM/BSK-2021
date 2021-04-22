@@ -35,23 +35,39 @@ public class DES implements Cipher {
         lfsr.setUserPolynomialInput("4,8,3");
         lfsr.initialize();
         Boolean[] lfsrGeneneratedKey = lfsr.algorithm(64);
+        System.out.println("lfsrGeneneratedKey.length: " + lfsrGeneneratedKey.length);
         key = Bits.boolToBitSet(lfsrGeneneratedKey);
+        System.out.println("Key:  " + lfsrGeneneratedKey.length);
         return key;
     }
 
     public Map<Integer,Bits> generate16Keys(Map keyHalfs){
         Map<Integer,Bits> keys = new HashMap<>();
-
-        System.out.println("Base: " + keyHalfs.get("L"));
         for (int i = 0; i < 16 ; i++) {
-            offsetBits((Bits) keyHalfs.get("L"),TabularData.offsetTable[i]);
-            offsetBits((Bits) keyHalfs.get("R"),TabularData.offsetTable[i]);
-
-            keys.put(keys.size(),offsetBits((Bits) keyHalfs.get("L"),TabularData.offsetTable[i]));
+            Bits offsetedLeft = offsetBits((Bits) keyHalfs.get("L"),TabularData.offsetTable[i]);
+            Bits offsetedRight = offsetBits((Bits) keyHalfs.get("R"),TabularData.offsetTable[i]);
+            Bits wholeKey = Bits.concatBits(offsetedLeft,offsetedRight);
+            keys.put(keys.size(),wholeKey);
         }
 
 
         return keys;
+    }
+
+    public Bits get48BitKeyByPC2(Bits key){
+        Bits permutedKey = new Bits(48);
+        int counter = 0;
+        Boolean b;
+
+        for (int i=0; i < TabularData.PC_2.length;i++){
+            for (int j = 0; j < TabularData.PC_2[i].length; j++) {
+                b = key.get(TabularData.PC_1[i][j]-1);
+                permutedKey.set(counter,b);
+                counter++;
+            }
+        }
+
+        return  permutedKey;
     }
 
     public Bits offsetBits(Bits bits, int offset){
