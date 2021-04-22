@@ -9,6 +9,7 @@ import utils.Bits;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.BitSet;
 import java.util.Map;
 
 
@@ -19,7 +20,7 @@ public class ReadWriteTest {
     @Test
     public void ReadDataTest() throws IOException {
 
-        File f = new File(getClass().getClassLoader().getResource("test_5_bytes.txt").getFile());
+        File f = new File(getClass().getClassLoader().getResource("test_500_bytes.txt").getFile());
 
         byte[] text = des.readFile(f);
 

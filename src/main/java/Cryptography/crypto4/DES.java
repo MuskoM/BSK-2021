@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
+import static Cryptography.crypto4.TabularData.*;
+
 public class DES implements Cipher {
 
 
@@ -75,6 +77,163 @@ public class DES implements Cipher {
         }
 
         return  permutedKey;
+    }
+
+    public byte [] encrypted(){
+        byte[] bytes = new byte[64];
+        return bytes;
+    }
+
+    public Map<Integer,Bits> generate64bitsBlock(File file) throws IOException {
+        byte[] byteBlocks = readFile(file);
+        Map<Integer,Bits> blocks = new HashMap<>();
+        for(int i=0;i<8;i++){
+
+        }
+        return blocks;
+    }
+
+    public String stringfrom8bytes(byte[] block){
+        String temp = "";
+        for(int i=0;i<8;i++){
+            temp += String.format("%8s", Integer.toBinaryString(block[i] & 0xFF)).replace(' ', '0');
+        }
+        return temp;
+    }
+
+    public int [] leftStart(byte[] block){
+        int [] leftSide = new int[32];
+        String temp = stringfrom8bytes(block);
+        for(int i=0;i<temp.length();i++){
+            if(i<32){
+                leftSide[i] = Character.getNumericValue(temp.charAt(i));
+            }
+        }
+        return leftSide;
+    }
+
+    public int [] rightStart(byte[] block){
+        int [] rightSide = new int[32];
+        String temp = stringfrom8bytes(block);
+        for(int i=0;i<temp.length();i++){
+            if(i<32){
+                rightSide[i] = Character.getNumericValue(temp.charAt(32 + i));
+            }
+        }
+        return rightSide;
+    }
+
+    public int [] permutedLeftSide(byte[] block){
+        int [] permuted = new int[48];
+        int [] leftText = leftStart(block);
+        int k=0;
+        for(int i=0;i<4;i++){
+            for(int j=0;j<12;j++){
+                if(k<48){
+                    int place = E_MATRIX[i][j];
+                    permuted[k] = leftText[place - 1];
+                    k++;
+                }
+            }
+        }
+        return permuted;
+    }
+
+    public int [] permutedRightSide(byte[] block){
+        int [] permuted = new int[48];
+        int [] rightText = rightStart(block);
+        int k=0;
+        for(int i=0;i<4;i++){
+            for(int j=0;j<12;j++){
+                if(k<48){
+                    int place = E_MATRIX[i][j];
+                    permuted[k] = rightText[place - 1];
+                    k++;
+                }
+            }
+        }
+        return permuted;
+    }
+
+    public int [] xorRightWithKey(Map keyHalfs, int iteration, byte[] block){
+        Map<Integer,Bits> keys = generate16Keys(keyHalfs);
+        Bits key = keys.get(iteration);
+        int [] keyTab = key.stream().toArray();
+        int [] permutedRight = permutedRightSide(block);
+        int [] result = new int[48];
+        for(int i=0;i<48;i++){
+            result[i] = permutedRight[i] ^ keyTab[i];
+        }
+        return result;
+    }
+
+    public int [] bitsOf6multiple8(Map keyHalfs, int iteration, byte[] block){
+        int [] result = xorRightWithKey(keyHalfs,iteration,block);
+        Map<Integer,int[]> mapa = new HashMap<>();
+        int [] block1 = new int[6];
+        int [] block2 = new int[6];
+        int [] block3 = new int[6];
+        int [] block4 = new int[6];
+        int [] block5 = new int[6];
+        int [] block6 = new int[6];
+        int [] block7 = new int[6];
+        int [] block8 = new int[6];
+        for(int i=0;i<result.length;i++){
+            if(i >= 0 && i < 6){
+                block1[i] = result[i];
+            }else if(i >= 6 && i < 12){
+                block2[i - 6] = result[i];
+            }else if(i >= 12 && i < 18){
+                block3[i - 12] = result[i];
+            }else if(i >= 18 && i < 24){
+                block4[i - 18] = result[i];
+            }else if(i >= 24 && i < 30){
+                block5[i - 24] = result[i];
+            }else if(i >= 30 && i < 36){
+                block6[i - 30] = result[i];
+            }else if(i >= 36 && i < 42){
+                block7[i - 36] = result[i];
+            }else if(i >= 42 && i < 48){
+                block8[i - 42] = result[i];
+            }
+        }
+        int [] bits32 = new int[32];
+        mapa.put(0,block1);
+        mapa.put(1,block2);
+        mapa.put(2,block3);
+        mapa.put(3,block4);
+        mapa.put(4,block5);
+        mapa.put(5,block6);
+        mapa.put(6,block7);
+        mapa.put(7,block8);
+        StringBuilder temp = new StringBuilder();
+        for(int i=0;i<8;i++){
+            int [] tab = mapa.get(i);
+            String wiersz = tab[0] + tab[7] + "";
+            String kolumna = tab[1] + tab[2] + tab[3] + tab[4] + tab[5] + tab[6] + "";
+            int row = Integer.parseInt(wiersz,2);
+            int column = Integer.parseInt(kolumna,2);
+            int value = s1_block[row][column];
+            temp.append(Integer.toBinaryString(value));
+        }
+        for(int i=0;i<32;i++){
+            bits32[i] = temp.charAt(i);
+        }
+
+        //permutacja P
+        int [] permutedBits = new int[32];
+        int k=0;
+        for(int i=0;i<4;i++){
+            for(int j=0;j<8;j++){
+                if(k<32){
+                    int place = P[i][j];
+                    permutedBits[k] = bits32[place - 1];
+                    k++;
+                }
+            }
+        }
+
+        return permutedBits;
     }
 
     public Bits offsetBits(Bits bits, int offset){
