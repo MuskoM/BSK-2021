@@ -1,4 +1,5 @@
+Cryptography/crypto4/DES.class
 BSK.class
-cw\CW4.class
-Cryptography\crypto3\TextStreamCipher.class
-Cryptography\crypto4\DES.class
+utils/Bits.class
+cw/CW4.class
+Cryptography/crypto4/TabularData.class
