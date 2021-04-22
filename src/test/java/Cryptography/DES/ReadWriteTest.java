@@ -88,4 +88,11 @@ public class ReadWriteTest {
         System.out.println(bitKey);
 
     }
+
+    @Test
+    public void testGenerate48BitKeysForDESAlgorithm(){
+        Map map = des.generateKeys();
+        map.forEach((o, o2) -> System.out.println("Nr: " + o + "Key: " + o2));
+    }
+
 }
