@@ -29,6 +29,13 @@ public class DES implements Cipher {
         return new byte[0];
     }
 
+    public Map<Integer,Bits> generateKeys(){
+        Bits baseKey = generateBaseKey();
+        Map<String,Bits> dividedKey = divideKey(baseKey);
+        Map<Integer,Bits> keys = generate16Keys(dividedKey);
+        return keys;
+    }
+
     public Bits generateBaseKey(){
         Bits key;
         LFSR lfsr = new LFSR();
