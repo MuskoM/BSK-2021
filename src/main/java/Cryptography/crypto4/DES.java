@@ -46,7 +46,7 @@ public class DES implements Cipher {
         for (int i = 0; i < 16 ; i++) {
             Bits offsetedLeft = offsetBits((Bits) keyHalfs.get("L"),TabularData.offsetTable[i]);
             Bits offsetedRight = offsetBits((Bits) keyHalfs.get("R"),TabularData.offsetTable[i]);
-            Bits wholeKey = Bits.concatBits(offsetedLeft,offsetedRight);
+            Bits wholeKey = get48BitKeyByPC2(Bits.concatBits(offsetedLeft,offsetedRight));
             keys.put(keys.size(),wholeKey);
         }
 
