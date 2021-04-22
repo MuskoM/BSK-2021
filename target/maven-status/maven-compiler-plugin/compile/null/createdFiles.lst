@@ -1,8 +1,4 @@
-Cryptography\crypto2\CesarCipher.class
-utils\InputChecker.class
-Cryptography\crypto1\Cryptography.class
 BSK.class
-Cryptography\Cipher.class
-Cryptography\crypto1\CryptographyB.class
-Cryptography\crypto1\CryptographyA.class
-Cryptography\crypto2\CryptographyC.class
+cw\CW4.class
+Cryptography\crypto3\TextStreamCipher.class
+Cryptography\crypto4\DES.class

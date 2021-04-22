@@ -2,6 +2,8 @@ package Cryptography.crypto1;
 
 // Rail Fence algorithm
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import Cryptography.Cipher;
 
@@ -15,6 +17,16 @@ public class CryptographyA  implements Cipher {
     @Override
     public byte[] decrypt(byte[] input, Object key) {
         return railFenceDecryption(input, (int)key);
+    }
+
+    @Override
+    public byte[] readFile(File file) throws IOException {
+        return new byte[0];
+    }
+
+    @Override
+    public void writeFile(File file, byte[] data) throws IOException {
+
     }
 
     public byte[] railFenceEncryption(byte[] input, int key) {

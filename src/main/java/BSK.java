@@ -1,6 +1,4 @@
-import cw.AssignmentExercise;
-import cw.CW1;
-import cw.CW2;
+import cw.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,8 +25,17 @@ public class BSK extends Application {
         AssignmentExercise cw2 = new CW2();
         Tab cw2Tab = cw2.createExecriseTab(primaryStage);
 
+        //Zadanie 3
+        AssignmentExercise cw3 = new CW3();
+        Tab cw3Tab = cw3.createExecriseTab(primaryStage);
+
+        //Zadanie 4 - DES
+        AssignmentExercise cw4 = new CW4();
+        Tab cw4Tab = cw4.createExecriseTab(primaryStage);
+
         TabPane tabPane = new TabPane(cw1Tab);
         tabPane.getTabs().add(cw2Tab);
+        tabPane.getTabs().add(cw3Tab);
         Scene scene = new Scene(tabPane,620,360);
         primaryStage.setScene(scene);
         scene.getStylesheets().add("./style.css");
@@ -37,17 +44,3 @@ public class BSK extends Application {
 
 }
 
-
-//class BSK{
-//    public static void main(String[] args) throws IOException {
-//        int[] key = new int[]{4,3,5,2,1,6,7,8};
-//
-//        byte[] text = Files.readAllBytes(new File("src/main/resources/data.nvi0").toPath());
-//
-//        byte[] encryptedMessage = Cryptography.offsetMatrixEncryption(text,key);
-//        System.out.println(Cryptography.encryptedString(encryptedMessage));
-//        byte[] decryptedMessage = Cryptography.offsetMatrixDecryption(encryptedMessage,key);
-//        System.out.println(Cryptography.encryptedString(decryptedMessage));
-//    }
-//
-//}
