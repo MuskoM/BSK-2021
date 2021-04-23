@@ -131,7 +131,7 @@ public class DES implements Cipher {
         return permuted;
     }
 
-    public byte [] permutedRightSide(byte[] block,byte[] table){
+    public byte [] permutedRightSide(byte[] table){
         byte [] permuted = new byte[48];
         int k=0;
         for(int i=0;i<4;i++){
@@ -240,7 +240,7 @@ public class DES implements Cipher {
     public byte[] encryptBlock64bits(Map keyHalfs,byte[] block){
         Map<Integer,Bits> keys = generate16Keys(keyHalfs);
         byte [] Ln = leftStart(block);
-        byte [] Rn = permutedRightSide(block,rightStart(block));
+        byte [] Rn = permutedRightSide(rightStart(block));
         byte [] Rn1;
         for(int i=0;i<16;i++){
             Rn1 = bitsOf6multiple8(keyHalfs,i,Rn);
