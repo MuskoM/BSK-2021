@@ -20,15 +20,22 @@ public class ReadWriteTest {
     @Test
     public void ReadDataTest() throws IOException {
 
-        File f = new File(getClass().getClassLoader().getResource("test_500_bytes.txt").getFile());
+        File f = new File(getClass().getClassLoader().getResource("test_5_bytes.txt").getFile());
 
         byte[] text = des.readFile(f);
 
-        for (byte b: text
-             ) {
+        for (byte b: text) {
             System.out.print(" " + String.format("%02X",b));
         }
 
+        Bits baseKey =des.generateBaseKey();
+        Map<String,Bits> dividedKey = des.divideKey(baseKey);
+        int [] wynik = des.encryptBlock64bits(dividedKey,f);
+        System.out.println("");
+        System.out.println("dlugosc wyniku:" + wynik.length);
+        for(int b: wynik){
+            System.out.print(" " + b);
+        }
     }
 
     @Test
