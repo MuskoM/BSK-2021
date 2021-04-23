@@ -236,11 +236,30 @@ public class DES implements Cipher {
         return permutedBits;
     }
 
+    public byte[] permuteBlock(File file) throws IOException {
+        byte [] block = readFile(file);
+        byte [] permutedBlock = new byte[64];
+
+        int k=0;
+        for(int i=0;i<4;i++){
+            for(int j=0;j<16;j++){
+                if(k<64){
+                    int place = IP_MATIX[i][j];
+                    permutedBlock[k] = block[place - 1];
+                }
+            }
+        }
+
+        return permutedBlock;
+    }
+
     //block reprezentuje 64 bitowy ciąg 0 i 1 w tablicy intów już po pierwszej permutacji
-    public byte[] encryptBlock64bits(Map keyHalfs,byte[] block){
-        Map<Integer,Bits> keys = generate16Keys(keyHalfs);
-        byte [] Ln = leftStart(block);
-        byte [] Rn = permutedRightSide(rightStart(block));
+    public byte[] encryptBlock64bits(Map keyHalfs, File file) throws IOException {
+        byte [] readBlock = permuteBlock(file);
+
+        //Map<Integer,Bits> keys = generate16Keys(keyHalfs);
+        byte [] Ln = leftStart(readBlock);
+        byte [] Rn = permutedRightSide(rightStart(readBlock));
         byte [] Rn1;
         for(int i=0;i<16;i++){
             Rn1 = bitsOf6multiple8(keyHalfs,i,Rn);
