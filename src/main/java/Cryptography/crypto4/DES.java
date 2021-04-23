@@ -94,44 +94,51 @@ public class DES implements Cipher {
     }
 
     public String stringfrom8bytes(byte[] block){
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         for(int i=0;i<8;i++){
-            temp += String.format("%8s", Integer.toBinaryString(block[i] & 0xFF)).replace(' ', '0');
+            temp.append(String.format("%8s", Integer.toBinaryString(block[i] & 0xFF)).replace(' ', '0'));
         }
-        return temp;
+        return temp.toString();
     }
 
-    public int [] leftStart(byte[] block){
-        int [] leftSide = new int[32];
+    public byte [] leftStart(byte[] block){
+        byte [] leftSide = new byte[32];
         String temp = stringfrom8bytes(block);
         for(int i=0;i<temp.length();i++){
             if(i<32){
-                leftSide[i] = Character.getNumericValue(temp.charAt(i));
+                leftSide[i] = (byte) temp.charAt(i);
             }
         }
         return leftSide;
     }
 
-    public int [] rightStart(byte[] block){
-        int [] rightSide = new int[32];
+    public byte [] rightStart(byte[] block){
+        byte [] rightSide = new byte[32];
         String temp = stringfrom8bytes(block);
         for(int i=0;i<temp.length();i++){
             if(i<32){
-                rightSide[i] = Character.getNumericValue(temp.charAt(32 + i));
+                rightSide[i] = (byte) temp.charAt(32 + i); //Character.getNumericValeu() może
             }
         }
         return rightSide;
     }
 
-    public int [] permutedLeftSide(byte[] block){
-        int [] permuted = new int[48];
-        int [] leftText = leftStart(block);
+    public byte [] xorLeftWithRight(byte[] left,byte[] right){
+        byte [] permuted = new byte[32];
+        for(int i=0;i<32;i++){
+            permuted[i] = (byte) (left[i] ^ right[i]);
+        }
+        return permuted;
+    }
+
+    public byte [] permutedRightSide(byte[] block,byte[] table){
+        byte [] permuted = new byte[48];
         int k=0;
         for(int i=0;i<4;i++){
             for(int j=0;j<12;j++){
                 if(k<48){
                     int place = E_MATRIX[i][j];
-                    permuted[k] = leftText[place - 1];
+                    permuted[k] = table[place - 1];
                     k++;
                 }
             }
@@ -139,37 +146,29 @@ public class DES implements Cipher {
         return permuted;
     }
 
-    public int [] permutedRightSide(byte[] block){
-        int [] permuted = new int[48];
-        int [] rightText = rightStart(block);
-        int k=0;
-        for(int i=0;i<4;i++){
-            for(int j=0;j<12;j++){
-                if(k<48){
-                    int place = E_MATRIX[i][j];
-                    permuted[k] = rightText[place - 1];
-                    k++;
-                }
-            }
-        }
-        return permuted;
-    }
-
-    public int [] xorRightWithKey(Map keyHalfs, int iteration, byte[] block){
+    public byte [] xorRightWithKey(Map keyHalfs, int iteration, byte[] rightSide){
         Map<Integer,Bits> keys = generate16Keys(keyHalfs);
         Bits key = keys.get(iteration);
         int [] keyTab = key.stream().toArray();
-        int [] permutedRight = permutedRightSide(block);
-        int [] result = new int[48];
+        byte [] result = new byte[48];
         for(int i=0;i<48;i++){
-            result[i] = permutedRight[i] ^ keyTab[i];
+            result[i] = (byte) (rightSide[i] ^ keyTab[i]);
         }
         return result;
     }
 
-    public int [] bitsOf6multiple8(Map keyHalfs, int iteration, byte[] block){
-        int [] result = xorRightWithKey(keyHalfs,iteration,block);
+    public byte [] bitsOf6multiple8(Map keyHalfs, int iteration, byte[] rightSide){
+        byte [] result = xorRightWithKey(keyHalfs,iteration,rightSide);
         Map<Integer,int[]> mapa = new HashMap<>();
+        Map<Integer,int[][]> mapS = new HashMap<>();
+        mapS.put(0,s1_block);
+        mapS.put(1,s2_block);
+        mapS.put(2,s3_block);
+        mapS.put(3,s4_block);
+        mapS.put(4,s5_block);
+        mapS.put(5,s6_block);
+        mapS.put(6,s7_block);
+        mapS.put(7,s8_block);
         int [] block1 = new int[6];
         int [] block2 = new int[6];
         int [] block3 = new int[6];
@@ -179,25 +178,25 @@ public class DES implements Cipher {
         int [] block7 = new int[6];
         int [] block8 = new int[6];
         for(int i=0;i<result.length;i++){
-            if(i >= 0 && i < 6){
+            if(i < 6){
                 block1[i] = result[i];
-            }else if(i >= 6 && i < 12){
+            }else if(i < 12){
                 block2[i - 6] = result[i];
-            }else if(i >= 12 && i < 18){
+            }else if(i < 18){
                 block3[i - 12] = result[i];
-            }else if(i >= 18 && i < 24){
+            }else if(i < 24){
                 block4[i - 18] = result[i];
-            }else if(i >= 24 && i < 30){
+            }else if(i < 30){
                 block5[i - 24] = result[i];
-            }else if(i >= 30 && i < 36){
+            }else if(i < 36){
                 block6[i - 30] = result[i];
-            }else if(i >= 36 && i < 42){
+            }else if(i < 42){
                 block7[i - 36] = result[i];
-            }else if(i >= 42 && i < 48){
+            }else if(i < 48){
                 block8[i - 42] = result[i];
             }
         }
-        int [] bits32 = new int[32];
+        byte [] bits32 = new byte[32];
         mapa.put(0,block1);
         mapa.put(1,block2);
         mapa.put(2,block3);
@@ -213,15 +212,16 @@ public class DES implements Cipher {
             String kolumna = tab[1] + tab[2] + tab[3] + tab[4] + tab[5] + tab[6] + "";
             int row = Integer.parseInt(wiersz,2);
             int column = Integer.parseInt(kolumna,2);
-            int value = s1_block[row][column];
+            int [][] currentMap = mapS.get(i);
+            int value = currentMap[row][column];
             temp.append(Integer.toBinaryString(value));
         }
         for(int i=0;i<32;i++){
-            bits32[i] = temp.charAt(i);
+            bits32[i] = (byte) temp.charAt(i);
         }
 
         //permutacja P
-        int [] permutedBits = new int[32];
+        byte [] permutedBits = new byte[32];
         int k=0;
         for(int i=0;i<4;i++){
             for(int j=0;j<8;j++){
@@ -235,6 +235,41 @@ public class DES implements Cipher {
 
         return permutedBits;
     }
+
+    //block reprezentuje 64 bitowy ciąg 0 i 1 w tablicy intów już po pierwszej permutacji
+    public byte[] encryptBlock64bits(Map keyHalfs,byte[] block){
+        Map<Integer,Bits> keys = generate16Keys(keyHalfs);
+        byte [] Ln = leftStart(block);
+        byte [] Rn = permutedRightSide(block,rightStart(block));
+        byte [] Rn1;
+        for(int i=0;i<16;i++){
+            Rn1 = bitsOf6multiple8(keyHalfs,i,Rn);
+            Rn = xorLeftWithRight(Ln,Rn1);
+            Ln = Rn1;
+        }
+        int [] result = new int[64];
+        for(int i=0;i<64;i++){
+            if(i<32){
+                result[i] = Rn[i];
+            }else{
+                result[i] = Ln[32 - i];
+            }
+        }
+        int k=0;
+        byte [] finalResult = new byte[64];
+        List<Byte> list = new LinkedList<>();
+        for(int i=0;i<4;i++){
+            for(int j=0;j<16;j++){
+                if(k<64){
+                    int place = IP_1_MATRIX[i][j];
+                    finalResult[k] = (byte) result[place - 1];
+                    k++;
+                }
+            }
+        }
+        return finalResult;
+    }
+
 
     public Bits offsetBits(Bits bits, int offset){
         Bits offsetBits = new Bits(bits.length());
