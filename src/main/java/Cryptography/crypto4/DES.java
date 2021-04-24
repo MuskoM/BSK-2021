@@ -365,7 +365,7 @@ public class DES implements Cipher {
         }
 
         for(int i=0;i< blocks.size();i++){
-            System.out.println("Przekazuje to do zaszyfrowania: " + Arrays.toString(blocks.get(i)) + " " + blocks.size());
+            System.out.println("Przekazuje to do zaszyfrowania: " + Arrays.toString(blocks.get(i)));
         }
 
         for(int i=0;i<bytes.length/8;i++){
@@ -386,7 +386,6 @@ public class DES implements Cipher {
 
         Map<Integer,byte[]> blocks = new HashMap<>();
         Map<Integer,byte[]> results = new HashMap<>();
-        //System.out.println("Dlugosc bytes w edcryptdes: " + bytes.length);
         int k = 0;
         for(int i=0;i< bytes.length/8;i++){
             byte [] temp = new byte[8];
@@ -400,7 +399,7 @@ public class DES implements Cipher {
         }
 
         for(int i=0;i< blocks.size();i++){
-            System.out.println("Przekazuje to do odszyfrowania: " + Arrays.toString(blocks.get(i)) + " " + blocks.size());
+            System.out.println("Przekazuje to do odszyfrowania: " + Arrays.toString(blocks.get(i)));
         }
 
         for(int i=0;i<bytes.length/8;i++){
