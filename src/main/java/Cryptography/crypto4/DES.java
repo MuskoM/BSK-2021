@@ -114,6 +114,9 @@ public class DES implements Cipher {
         for(int i=0;i<32;i++){
             permuted[i] = left[i] ^ right[i];
         }
+        //System.out.println(Arrays.toString(left));
+        //System.out.println(Arrays.toString(right));
+        //System.out.println(Arrays.toString(permuted));
         return permuted;
     }
 
@@ -125,10 +128,14 @@ public class DES implements Cipher {
                 if(k<48){
                     int place = E_MATRIX[i][j];
                     permuted[k] = table[place - 1];
+                    if(permuted[k] == 48 || permuted[k] == 49){
+                        permuted[k] = Character.getNumericValue(permuted[k]);
+                    }
                     k++;
                 }
             }
         }
+        //System.out.println(Arrays.toString(permuted));
         return permuted;
     }
 
@@ -141,6 +148,7 @@ public class DES implements Cipher {
             String keyTab = key.toString();
             for(int i=0;i<48;i++){
                 int val = rightSide[i] ^ keyTab.charAt(i);
+                //System.out.println(val+"|"+ rightSide[i]+"|"+keyTab.charAt(i));
                 if(val == 48 || val == 49){
                     result[i] = Character.getNumericValue(val);
                 }else{
@@ -152,6 +160,7 @@ public class DES implements Cipher {
             String keyTab = key.toString();
             for(int i=0;i<48;i++){
                 int val = rightSide[i] ^ keyTab.charAt(i);
+                //System.out.println(val);
                 if(val == 48 || val == 49){
                     result[i] = Character.getNumericValue(val);
                 }else{
@@ -165,6 +174,7 @@ public class DES implements Cipher {
 
     public int [] bitsOf6multiple8(Map keyHalfs, int iteration, int[] rightSide,boolean MODE){
         int [] result = xorRightWithKey(keyHalfs,iteration,rightSide,MODE);
+        //System.out.println(Arrays.toString(result));
         Map<Integer,int[]> mapa = new HashMap<>();
         Map<Integer,int[][]> mapSbloks = new HashMap<>();
         mapSbloks.put(0,s1_block);
@@ -236,11 +246,14 @@ public class DES implements Cipher {
                 if(k<32){
                     int place = P[i][j];
                     permutedBits[k] = bits32[place - 1];
+                    if(permutedBits[k] == 48 || permutedBits[k] == 49){
+                        result[i] = Character.getNumericValue(permutedBits[k]);
+                    }
                     k++;
                 }
             }
         }
-
+        //System.out.println(Arrays.toString(permutedBits));
         return permutedBits;
     }
 
@@ -273,9 +286,11 @@ public class DES implements Cipher {
         boolean MODE = true;
         int [] Ln = leftStart(readBlock);
         int [] Rn = permutedRightSide(rightStart(readBlock));
+        //System.out.println(Arrays.toString(Rn));
         int [] Rn1;
         for(int i=0;i<16;i++){
             Rn1 = bitsOf6multiple8(keyHalfs,i,Rn,MODE);//previous right
+            //System.out.println(Arrays.toString(Rn1));
             Rn = xorLeftWithRight(Ln,Rn1);//next right
             Ln = Rn1;//next left
         }
