@@ -46,6 +46,7 @@ public class CW4 implements AssignmentExercise {
 
         //key file chooser
         Button openKeyFileBtn = new Button("Select key file");
+        openKeyFileBtn.setDisable(true);
         openKeyFileBtn.setOnAction(actionEvent -> {
             try {
                 FileChooser fileChooser = new FileChooser();
@@ -138,6 +139,9 @@ public class CW4 implements AssignmentExercise {
                     WORKING_MODE_ENCRYPT = funcLabels[new_val.intValue()];
                 }
         );
+        functionChoiceBoxEncrypt.setOnAction(actionEvent -> {
+            openKeyFileBtn.setDisable(WORKING_MODE_ENCRYPT.equals("Encrypt"));
+        });
         grid.add(functionChoiceBoxEncrypt, 0, 3);
 
         return des_tab;
