@@ -14,6 +14,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Map;
+
+import utils.Bits;
 
 public class CW4 implements AssignmentExercise {
 
@@ -131,6 +134,20 @@ public class CW4 implements AssignmentExercise {
         });
         grid.add(encryptButton, 1, 4);
 
+        Button saveKeyButton = new Button("Save key to disk");
+        saveKeyButton.setOnAction(actionEvent -> {
+            Map<Integer, Bits> keymap = des.generateKeys();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save key file");
+            File file = fileChooser.showSaveDialog(primaryStage);
+            if (file != null) {
+//                writeFile(file, keymap.serialize);
+                //jakim sposobem zrobić, żeby działała serializacja mapy?
+                // hashmap pozwala, zwykła mapa już nie
+            }
+        });
+
+
         ChoiceBox functionChoiceBoxEncrypt = new ChoiceBox(FXCollections.observableArrayList("Encrypt", "Decrypt"));
         functionChoiceBoxEncrypt.setValue("Encrypt");
         functionChoiceBoxEncrypt.getSelectionModel().selectedIndexProperty().addListener(
@@ -141,6 +158,7 @@ public class CW4 implements AssignmentExercise {
         );
         functionChoiceBoxEncrypt.setOnAction(actionEvent -> {
             openKeyFileBtn.setDisable(WORKING_MODE_ENCRYPT.equals("Encrypt"));
+            saveKeyButton.setDisable(WORKING_MODE_ENCRYPT.equals("Decrypt"));
         });
         grid.add(functionChoiceBoxEncrypt, 0, 3);
 
