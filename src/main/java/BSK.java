@@ -36,6 +36,7 @@ public class BSK extends Application {
         TabPane tabPane = new TabPane(cw1Tab);
         tabPane.getTabs().add(cw2Tab);
         tabPane.getTabs().add(cw3Tab);
+        tabPane.getTabs().add(cw4Tab);
         Scene scene = new Scene(tabPane,620,360);
         primaryStage.setScene(scene);
         scene.getStylesheets().add("./style.css");
