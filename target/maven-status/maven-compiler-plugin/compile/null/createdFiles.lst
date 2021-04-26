@@ -1,5 +1,5 @@
-Cryptography/crypto4/DES.class
+utils\Bits.class
 BSK.class
-utils/Bits.class
-cw/CW4.class
-Cryptography/crypto4/TabularData.class
+cw\CW4.class
+Cryptography\crypto4\DES.class
+Cryptography\crypto4\TabularData.class

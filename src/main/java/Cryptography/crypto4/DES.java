@@ -354,6 +354,7 @@ public class DES implements Cipher {
             }
             results.put(i,result);
         }
+        System.out.println(Arrays.toString(results.get(0)));
         return results;
     }
 
