@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -122,8 +123,8 @@ public class CW4 implements AssignmentExercise {
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
                             System.out.println("encrypt others");
                             Map<Integer, byte[]> encryptedBytes = des.encryptDES(keyMap[0], file[0]);
-                            System.out.println(encryptedBytes.toString());
-                            writeKeys(file[0], encryptedBytes);
+                            System.out.println(Arrays.toString(encryptedBytes.get(0)));
+                            writeFile(file[0], encryptedBytes);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
                             System.out.println("decrypt others");
                             Map<Integer, byte[]> decryptedBytes = des.decryptDES(keyMap[0], file[0]);
@@ -180,10 +181,32 @@ public class CW4 implements AssignmentExercise {
     }
 
     public void writeFile(File file, Map<Integer, byte[]> data) throws IOException {
-        Files.write(file.toPath(), (Iterable<? extends CharSequence>) data);
+        Files.write(file.toPath(), heh(data));
     }
+
+
 
     public void writeKeys(File file, byte[] data) throws IOException {
         Files.write(file.toPath(), data);
+    }
+
+    public byte[] heh(Map<Integer, byte[]> map) {
+        System.out.println(map);
+        byte[] array = new byte[8*map.size()];
+        for (int i = 0; i < map.size(); i++) {
+            byte[] temp = map.get(i);
+            for (int j = 0; j < array.length; j++) {
+                array[j] = temp[j%8];
+            }
+        }
+        System.out.println(Arrays.toString(array));
+        return array;
+    }
+
+    public ObjectOutputStream mapToByteArray(Map<Integer, byte[]> map) throws IOException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(map);
+        return out;
     }
 }
