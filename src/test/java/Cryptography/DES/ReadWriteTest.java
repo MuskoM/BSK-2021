@@ -23,9 +23,7 @@ public class ReadWriteTest {
     @Test
     public void ReadDataTest() throws IOException {
 
-        File f = new File(getClass().getClassLoader().getResource("test_5_bytes.txt").getFile());
-        //poniższy plik w momencie pisania komentarza jest nie właściwy, i testy będą pokazywały że algorytm nie działa
-        //gdyż w tym momencie nie ma zapisywania zaszyfrowanej wiadomości do pliku
+        File f = new File(getClass().getClassLoader().getResource("test_500_bytes.txt").getFile());
         File fd = new File(getClass().getClassLoader().getResource("test_5_bytes_to_decrypt.txt").getFile());
 
         byte[] text = des.readFile(f);
@@ -47,11 +45,32 @@ public class ReadWriteTest {
             System.out.println(Arrays.toString(wynik.get(i)));
         }
 
-        Map<Integer, byte[]> decrypt = des.decryptDES(dividedKey,fd); //na potrzeby testów z plikiem 5_bytes, potrzeba tu przekazać wynik.get(0)
+        Map<Integer, byte[]> decrypt = des.decryptDES(dividedKey,fd);//na potrzeby testów z plikiem 5_bytes, potrzeba tu przekazać wynik.get(0)
         System.out.println("Odszyfrowane(w bytach):");
-        for(int i=0;i< decrypt.size();i++){
-            System.out.println(Arrays.toString(decrypt.get(i)));
+        //for(int i=0;i< decrypt.size();i++){
+        //    System.out.println(Arrays.toString(decrypt.get(i)));
+        //}
+    }
+
+    @Test
+    public void imageTest() throws IOException {
+        File f = new File(getClass().getClassLoader().getResource("jpg.jpg").getFile());
+        File fd = new File(getClass().getClassLoader().getResource("test_5_bytes_to_decrypt.txt").getFile());
+        //plik fd tylko po to aby nie było błędu
+        byte[] bytes = des.readFile(f);
+        System.out.println("Do zaszyfrowania:");
+        for (int i=0;i<8;i++) {
+            System.out.print(bytes[i] + " ");
         }
+        Bits baseKey =des.generateBaseKey();
+        Map<String,Bits> dividedKey = des.divideKey(baseKey);
+        Map<Integer, byte[]> wynik = des.encryptDES(dividedKey,f);
+        //Map<Integer, byte[]> decrypt = des.decryptDES(dividedKey,fd,wynik.get(0));
+        System.out.println("Odszyfrowane(w bytach):");
+        //for(int i=0;i< decrypt.size();i++){
+        //    System.out.println(Arrays.toString(decrypt.get(i)));
+        //}
+
     }
 
     @Test

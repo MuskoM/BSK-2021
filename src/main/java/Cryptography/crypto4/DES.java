@@ -39,6 +39,23 @@ public class DES implements Cipher {
         return keys;
     }
 
+    public Bits generateWeakKey(){
+        Bits key;
+        Boolean[] lfsrGeneneratedKey = new Boolean[]{false,false,false,false,false,false,false,false,
+                false,false,false,false,false,false,false,false,false,false,false,false,false,false,
+                false,false,false,false,false,false,false,false,false,false,false,false,false,false,
+                false,false,false,false,false,false,false,false,false,false,false,false,false,false,
+                false,false,false,false,false,false,false,false,false,false,false,false,false,false};
+        Boolean[] onlyTrue = new Boolean[]{true,true,true,true,true,true,true,true,true,true,true,true,
+                true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,
+                true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,
+                true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true, true};
+        System.out.println("lfsrGeneneratedKey.length: " + lfsrGeneneratedKey.length);
+        key = Bits.boolToBitSet(lfsrGeneneratedKey);
+        System.out.println("Key:  " + lfsrGeneneratedKey.length);
+        return key;
+    }
+
     public Bits generateBaseKey(){
         Bits key;
         LFSR lfsr = new LFSR();
@@ -341,27 +358,26 @@ public class DES implements Cipher {
             blocks.put(i,temp);
         }
 
-        for(int i=0;i< blocks.size();i++){
-            System.out.println("Przekazuje to do zaszyfrowania: " + Arrays.toString(blocks.get(i)));
-        }
+        //for(int i=0;i< blocks.size();i++){
+        //    System.out.println("Przekazuje to do zaszyfrowania: " + Arrays.toString(blocks.get(i)));
+        //}
 
+        System.out.println(bytes.length/8);
         for(int i=0;i<bytes.length/8;i++){
             int [] pomoc;
             byte[] result = new byte[8];
             pomoc = binToString(encryptBlock64bits(keyHalfs,blocks.get(i)));
-            for(int j=0;j<8;j++){
+            for(int j=0;j<8;j++) {
                 result[j] = (byte) pomoc[j];
             }
             results.put(i,result);
         }
-        System.out.println(Arrays.toString(results.get(0)));
         return results;
     }
 
-    public Map<Integer, byte[]> decryptDES(Map keyHalfs,File file) throws IOException {
+    public Map<Integer, byte[]> decryptDES(Map keyHalfs,File file/*,byte[] test*/) throws IOException {
         byte[] bytes = readFile(file);
-        //byte[] bytes = testMap; //na potrzeby testów testMap jako parametr byte[]
-
+        //byte[] bytes = test; do testów
         Map<Integer,byte[]> blocks = new HashMap<>();
         Map<Integer,byte[]> results = new HashMap<>();
         int k = 0;
@@ -376,9 +392,9 @@ public class DES implements Cipher {
             blocks.put(i,temp);
         }
 
-        for(int i=0;i< blocks.size();i++){
-            System.out.println("Przekazuje to do odszyfrowania: " + Arrays.toString(blocks.get(i)));
-        }
+        //for(int i=0;i< blocks.size();i++){
+        //    System.out.println("Przekazuje to do odszyfrowania: " + Arrays.toString(blocks.get(i)));
+        //}
 
         for(int i=0;i<bytes.length/8;i++){
             int [] pomoc;
