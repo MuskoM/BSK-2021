@@ -8,7 +8,11 @@ import org.junit.jupiter.api.Test;
 import utils.Bits;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Map;
 
 
@@ -20,14 +24,34 @@ public class ReadWriteTest {
     public void ReadDataTest() throws IOException {
 
         File f = new File(getClass().getClassLoader().getResource("test_5_bytes.txt").getFile());
+        //poniższy plik w momencie pisania komentarza jest nie właściwy, i testy będą pokazywały że algorytm nie działa
+        //gdyż w tym momencie nie ma zapisywania zaszyfrowanej wiadomości do pliku
+        File fd = new File(getClass().getClassLoader().getResource("test_5_bytes_to_decrypt.txt").getFile());
 
         byte[] text = des.readFile(f);
 
-        for (byte b: text
-             ) {
+        for (byte b: text) {
             System.out.print(" " + String.format("%02X",b));
         }
+        System.out.println();
+        System.out.println("Do zaszyfrowania:");
+        for (byte value : text) {
+            System.out.print(" " + value);
+        }
 
+        Bits baseKey =des.generateBaseKey();
+        Map<String,Bits> dividedKey = des.divideKey(baseKey);
+        Map<Integer, byte[]> wynik = des.encryptDES(dividedKey,f);
+        System.out.println("Zaszyfrowane(w bytach):");
+        for(int i=0;i< wynik.size();i++){
+            System.out.println(Arrays.toString(wynik.get(i)));
+        }
+
+        Map<Integer, byte[]> decrypt = des.decryptDES(dividedKey,fd); //na potrzeby testów z plikiem 5_bytes, potrzeba tu przekazać wynik.get(0)
+        System.out.println("Odszyfrowane(w bytach):");
+        for(int i=0;i< decrypt.size();i++){
+            System.out.println(Arrays.toString(decrypt.get(i)));
+        }
     }
 
     @Test
