@@ -103,34 +103,29 @@ public class CW4 implements AssignmentExercise {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         ImageIO.write(img, "png", bos);
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                            byte[] encryptedBytes = des.encrypt(bos.toByteArray(), o);
-                            ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
-                            ImageIO.write(ImageIO.read(bis), "png", file);
+                            Map<Integer, byte[]> encryptedBytes = des.encryptDES((Map) o, file);
+                            ImageIO.write(ImageIO.read((File) encryptedBytes), "png", file);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                            byte[] decryptedBytes = des.decrypt(bos.toByteArray(), o);
-                            ByteArrayInputStream bis = new ByteArrayInputStream(decryptedBytes);
-                            ImageIO.write(ImageIO.read(bis), "png", file);
+                            Map<Integer, byte[]> decryptedBytes = des.decryptDES((Map)o, file);
+                            ImageIO.write(ImageIO.read((File) decryptedBytes), "png", file);
                         }
                     } else if (file.getName().split("\\.")[1].equals("jpg")) {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         ImageIO.write(img, "jpg", bos);
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                            byte[] encryptedBytes = des.encrypt(bos.toByteArray(), o);
-                            ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
-                            ImageIO.write(ImageIO.read(bis), "jpg", file);
+                            Map<Integer, byte[]> encryptedBytes = des.encryptDES((Map) o, file);
+                            ImageIO.write(ImageIO.read((File)encryptedBytes), "jpg", file);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                            byte[] decryptedBytes = des.decrypt(bos.toByteArray(), o);
-                            ByteArrayInputStream bis = new ByteArrayInputStream(decryptedBytes);
-                            ImageIO.write(ImageIO.read(bis), "jpg", file);
+                            Map<Integer, byte[]> decryptedBytes = des.decryptDES((Map)o, file);
+                            ImageIO.write(ImageIO.read((File)decryptedBytes), "jpg", file);
                         }
                     } else {
-                        byte[] textEncrypted;
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                            textEncrypted = des.encrypt(data[0], o);
-                            writeFile(file, textEncrypted);
+                            Map<Integer, byte[]> encryptedBytes = des.encryptDES((Map) o, file);
+                            writeFile(file, encryptedBytes);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                            textEncrypted = des.decrypt(data[0], o);
-                            writeFile(file, textEncrypted);
+                            Map<Integer, byte[]> decryptedBytes = des.decryptDES((Map)o, file);
+                            writeFile(file, decryptedBytes);
                         }
                     }
                 } catch (Exception e) {
@@ -152,7 +147,7 @@ public class CW4 implements AssignmentExercise {
                     ObjectOutputStream out = new ObjectOutputStream(keyOut);
                     out.writeObject(keymap);
                     out.flush();
-                    writeFile(file, keyOut.toByteArray());
+                    writeKeys(file, keyOut.toByteArray());
                     keyOut.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -183,7 +178,11 @@ public class CW4 implements AssignmentExercise {
         return Files.readAllBytes(file.toPath());
     }
 
-    public void writeFile(File file, byte[] data) throws IOException {
+    public void writeFile(File file, Map<Integer, byte[]> data) throws IOException {
+        Files.write(file.toPath(), (Iterable<? extends CharSequence>) data);
+    }
+
+    public void writeKeys(File file, byte[] data) throws IOException {
         Files.write(file.toPath(), data);
     }
 }
