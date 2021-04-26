@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import utils.Bits;
 
@@ -32,6 +33,7 @@ public class CW4 implements AssignmentExercise {
         final byte[][] data = {new byte[0]};
         final byte[][] key_data = {new byte[0]};
         DES des = new DES();
+        AtomicReference<Object> o = null;
 
         //Main grid
         GridPane grid = new GridPane();
@@ -56,7 +58,11 @@ public class CW4 implements AssignmentExercise {
                 File file = fileChooser.showOpenDialog(primaryStage);
                 key = readFile(file);
                 key_data[0] = readFile(file);
-            } catch (NullPointerException | IOException e) {
+                ByteArrayInputStream bis = new ByteArrayInputStream(key_data[0]);
+                ObjectInput in = new ObjectInputStream(bis);
+                assert o != null;
+                o.set(in.readObject());
+            } catch (NullPointerException | IOException | ClassNotFoundException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Something went wrong");
                 alert.setHeaderText("There is an error with your key.");
@@ -97,11 +103,11 @@ public class CW4 implements AssignmentExercise {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         ImageIO.write(img, "png", bos);
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                            byte[] encryptedBytes = des.encrypt(bos.toByteArray(), key);
+                            byte[] encryptedBytes = des.encrypt(bos.toByteArray(), o);
                             ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
                             ImageIO.write(ImageIO.read(bis), "png", file);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                            byte[] decryptedBytes = des.decrypt(bos.toByteArray(), key);
+                            byte[] decryptedBytes = des.decrypt(bos.toByteArray(), o);
                             ByteArrayInputStream bis = new ByteArrayInputStream(decryptedBytes);
                             ImageIO.write(ImageIO.read(bis), "png", file);
                         }
@@ -109,21 +115,21 @@ public class CW4 implements AssignmentExercise {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         ImageIO.write(img, "jpg", bos);
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                            byte[] encryptedBytes = des.encrypt(bos.toByteArray(), key);
+                            byte[] encryptedBytes = des.encrypt(bos.toByteArray(), o);
                             ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
                             ImageIO.write(ImageIO.read(bis), "jpg", file);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                            byte[] decryptedBytes = des.decrypt(bos.toByteArray(), key);
+                            byte[] decryptedBytes = des.decrypt(bos.toByteArray(), o);
                             ByteArrayInputStream bis = new ByteArrayInputStream(decryptedBytes);
                             ImageIO.write(ImageIO.read(bis), "jpg", file);
                         }
                     } else {
                         byte[] textEncrypted;
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
-                            textEncrypted = des.encrypt(data[0], key);
+                            textEncrypted = des.encrypt(data[0], o);
                             writeFile(file, textEncrypted);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
-                            textEncrypted = des.decrypt(data[0], key);
+                            textEncrypted = des.decrypt(data[0], o);
                             writeFile(file, textEncrypted);
                         }
                     }
@@ -141,11 +147,19 @@ public class CW4 implements AssignmentExercise {
             fileChooser.setTitle("Save key file");
             File file = fileChooser.showSaveDialog(primaryStage);
             if (file != null) {
-//                writeFile(file, keymap.serialize);
-                //jakim sposobem zrobić, żeby działała serializacja mapy?
-                // hashmap pozwala, zwykła mapa już nie
+                ByteArrayOutputStream keyOut = new ByteArrayOutputStream();
+                try {
+                    ObjectOutputStream out = new ObjectOutputStream(keyOut);
+                    out.writeObject(keymap);
+                    out.flush();
+                    writeFile(file, keyOut.toByteArray());
+                    keyOut.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
+        grid.add(saveKeyButton, 0, 10);
 
 
         ChoiceBox functionChoiceBoxEncrypt = new ChoiceBox(FXCollections.observableArrayList("Encrypt", "Decrypt"));
