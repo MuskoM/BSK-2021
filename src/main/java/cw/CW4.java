@@ -78,10 +78,7 @@ public class CW4 implements AssignmentExercise {
             try {
                 FileChooser fileChooser = new FileChooser();
                 File file = fileChooser.showOpenDialog(primaryStage);
-                FileInputStream fileInputStream = new FileInputStream(file);
-                img = ImageIO.read(fileInputStream);
-                data[0] = readFile(file);
-            } catch (NullPointerException | IOException e) {
+            } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Something went wrong");
                 alert.setHeaderText("There is an error with your key.");
