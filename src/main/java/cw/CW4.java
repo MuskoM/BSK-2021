@@ -97,7 +97,6 @@ public class CW4 implements AssignmentExercise {
             if (file[0] != null && img != null) {
                 try {
                     if (file[0].getName().split("\\.")[1].equals("png")) {
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
                             Map<Integer, byte[]> encryptedBytes = des.encryptDES(keyMap[0], file[0]);
                             ImageIO.write(ImageIO.read((File) encryptedBytes), "png", file[0]);
@@ -106,7 +105,6 @@ public class CW4 implements AssignmentExercise {
                             ImageIO.write(ImageIO.read((File) decryptedBytes), "png", file[0]);
                         }
                     } else if (file[0].getName().split("\\.")[1].equals("jpg")) {
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
                             Map<Integer, byte[]> encryptedBytes = des.encryptDES(keyMap[0], file[0]);
                             ImageIO.write(ImageIO.read((File)encryptedBytes), "jpg", file[0]);
