@@ -94,29 +94,38 @@ public class CW4 implements AssignmentExercise {
             fileChooser.setTitle("Save as file");
             file[0] = fileChooser.showSaveDialog(primaryStage);
             System.out.println(keyMap[0].toString());
-            if (file[0] != null && img != null) {
+            if (file[0] != null) {
+                System.out.println("please work???");
                 try {
-                    if (file[0].getName().split("\\.")[1].equals("png")) {
+                    System.out.println(file[0].getName());
+                    if (file[0].getName().split("\\.")[0].equals("png")) {
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
+                            System.out.println("encrypt png");
                             Map<Integer, byte[]> encryptedBytes = des.encryptDES(keyMap[0], file[0]);
                             ImageIO.write(ImageIO.read((File) encryptedBytes), "png", file[0]);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
+                            System.out.println("decrypt png");
                             Map<Integer, byte[]> decryptedBytes = des.decryptDES(keyMap[0], file[0]);
                             ImageIO.write(ImageIO.read((File) decryptedBytes), "png", file[0]);
                         }
-                    } else if (file[0].getName().split("\\.")[1].equals("jpg")) {
+                    } else if (file[0].getName().split("\\.")[0].equals("jpg")) {
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
+                            System.out.println("encrypt jpg");
                             Map<Integer, byte[]> encryptedBytes = des.encryptDES(keyMap[0], file[0]);
                             ImageIO.write(ImageIO.read((File)encryptedBytes), "jpg", file[0]);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
+                            System.out.println("decrypt jpg");
                             Map<Integer, byte[]> decryptedBytes = des.decryptDES(keyMap[0], file[0]);
                             ImageIO.write(ImageIO.read((File)decryptedBytes), "jpg", file[0]);
                         }
                     } else {
                         if (WORKING_MODE_ENCRYPT.equals("Encrypt")) {
+                            System.out.println("encrypt others");
                             Map<Integer, byte[]> encryptedBytes = des.encryptDES(keyMap[0], file[0]);
-                            writeFile(file[0], encryptedBytes);
+                            System.out.println(encryptedBytes.toString());
+                            writeKeys(file[0], encryptedBytes);
                         } else if (WORKING_MODE_ENCRYPT.equals("Decrypt")) {
+                            System.out.println("decrypt others");
                             Map<Integer, byte[]> decryptedBytes = des.decryptDES(keyMap[0], file[0]);
                             writeFile(file[0], decryptedBytes);
                         }
@@ -130,7 +139,6 @@ public class CW4 implements AssignmentExercise {
 
         Button saveKeyButton = new Button("Save key to disk");
         saveKeyButton.setOnAction(actionEvent -> {
-            Map<Integer, Bits> keymap = des.generateKeys();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save key file");
             file[0] = fileChooser.showSaveDialog(primaryStage);
@@ -138,7 +146,8 @@ public class CW4 implements AssignmentExercise {
                 try {
                     FileOutputStream fos = new FileOutputStream(file[0]);
                     ObjectOutputStream out = new ObjectOutputStream(fos);
-                    out.writeObject(keymap);
+                    out.writeObject(keyMap[0]);
+                    System.out.println(keyMap[0]);
                     out.close();
                     fos.close();
                 } catch (IOException e) {
